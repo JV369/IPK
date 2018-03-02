@@ -57,41 +57,67 @@ include CMakeFiles/proj1.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/proj1.dir/flags.make
 
-CMakeFiles/proj1.dir/main.c.o: CMakeFiles/proj1.dir/flags.make
-CMakeFiles/proj1.dir/main.c.o: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jan/IPK/proj1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/proj1.dir/main.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/proj1.dir/main.c.o   -c /home/jan/IPK/proj1/main.c
+CMakeFiles/proj1.dir/client.c.o: CMakeFiles/proj1.dir/flags.make
+CMakeFiles/proj1.dir/client.c.o: ../client.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jan/IPK/proj1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/proj1.dir/client.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/proj1.dir/client.c.o   -c /home/jan/IPK/proj1/client.c
 
-CMakeFiles/proj1.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/proj1.dir/main.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/jan/IPK/proj1/main.c > CMakeFiles/proj1.dir/main.c.i
+CMakeFiles/proj1.dir/client.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/proj1.dir/client.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/jan/IPK/proj1/client.c > CMakeFiles/proj1.dir/client.c.i
 
-CMakeFiles/proj1.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/proj1.dir/main.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/jan/IPK/proj1/main.c -o CMakeFiles/proj1.dir/main.c.s
+CMakeFiles/proj1.dir/client.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/proj1.dir/client.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/jan/IPK/proj1/client.c -o CMakeFiles/proj1.dir/client.c.s
 
-CMakeFiles/proj1.dir/main.c.o.requires:
+CMakeFiles/proj1.dir/client.c.o.requires:
 
-.PHONY : CMakeFiles/proj1.dir/main.c.o.requires
+.PHONY : CMakeFiles/proj1.dir/client.c.o.requires
 
-CMakeFiles/proj1.dir/main.c.o.provides: CMakeFiles/proj1.dir/main.c.o.requires
-	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/main.c.o.provides.build
-.PHONY : CMakeFiles/proj1.dir/main.c.o.provides
+CMakeFiles/proj1.dir/client.c.o.provides: CMakeFiles/proj1.dir/client.c.o.requires
+	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/client.c.o.provides.build
+.PHONY : CMakeFiles/proj1.dir/client.c.o.provides
 
-CMakeFiles/proj1.dir/main.c.o.provides.build: CMakeFiles/proj1.dir/main.c.o
+CMakeFiles/proj1.dir/client.c.o.provides.build: CMakeFiles/proj1.dir/client.c.o
+
+
+CMakeFiles/proj1.dir/server.c.o: CMakeFiles/proj1.dir/flags.make
+CMakeFiles/proj1.dir/server.c.o: ../server.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jan/IPK/proj1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/proj1.dir/server.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/proj1.dir/server.c.o   -c /home/jan/IPK/proj1/server.c
+
+CMakeFiles/proj1.dir/server.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/proj1.dir/server.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/jan/IPK/proj1/server.c > CMakeFiles/proj1.dir/server.c.i
+
+CMakeFiles/proj1.dir/server.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/proj1.dir/server.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/jan/IPK/proj1/server.c -o CMakeFiles/proj1.dir/server.c.s
+
+CMakeFiles/proj1.dir/server.c.o.requires:
+
+.PHONY : CMakeFiles/proj1.dir/server.c.o.requires
+
+CMakeFiles/proj1.dir/server.c.o.provides: CMakeFiles/proj1.dir/server.c.o.requires
+	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/server.c.o.provides.build
+.PHONY : CMakeFiles/proj1.dir/server.c.o.provides
+
+CMakeFiles/proj1.dir/server.c.o.provides.build: CMakeFiles/proj1.dir/server.c.o
 
 
 # Object files for target proj1
 proj1_OBJECTS = \
-"CMakeFiles/proj1.dir/main.c.o"
+"CMakeFiles/proj1.dir/client.c.o" \
+"CMakeFiles/proj1.dir/server.c.o"
 
 # External object files for target proj1
 proj1_EXTERNAL_OBJECTS =
 
-proj1: CMakeFiles/proj1.dir/main.c.o
+proj1: CMakeFiles/proj1.dir/client.c.o
+proj1: CMakeFiles/proj1.dir/server.c.o
 proj1: CMakeFiles/proj1.dir/build.make
 proj1: CMakeFiles/proj1.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jan/IPK/proj1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable proj1"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jan/IPK/proj1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable proj1"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/proj1.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -99,7 +125,8 @@ CMakeFiles/proj1.dir/build: proj1
 
 .PHONY : CMakeFiles/proj1.dir/build
 
-CMakeFiles/proj1.dir/requires: CMakeFiles/proj1.dir/main.c.o.requires
+CMakeFiles/proj1.dir/requires: CMakeFiles/proj1.dir/client.c.o.requires
+CMakeFiles/proj1.dir/requires: CMakeFiles/proj1.dir/server.c.o.requires
 
 .PHONY : CMakeFiles/proj1.dir/requires
 

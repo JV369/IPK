@@ -84,7 +84,10 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/jan/IPK/proj1/main.c">
+		<Unit filename="/home/jan/IPK/proj1/client.c">
+			<Option target="proj1"/>
+		</Unit>
+		<Unit filename="/home/jan/IPK/proj1/server.c">
 			<Option target="proj1"/>
 		</Unit>
 		<Unit filename="/home/jan/IPK/proj1/CMakeLists.txt">

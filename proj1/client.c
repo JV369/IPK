@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef enum {NAME = 30, FILEDIR, LIST}message_type;
+
+typedef struct Message{
+    message_type type;
+    char *argument;
+}TMessage;
+
+
+int check_arg(char **arguments,int lenght, long *socket, char **address, TMessage *message){
+    if(lenght > 7 || lenght < 6){
+        return 1;
+    }
+    for (int i = 1; i < lenght; i+=2) {
+        if(strcmp(arguments[i], "-h") == 0){
+            *address = (char *)malloc(strlen(arguments[i+1])+1);
+            strcpy(*address,arguments[i+1]);
+        }
+        else if(strcmp(arguments[i],"-p") == 0){
+            *socket = strtol(arguments[i+1],NULL,10);
+        }
+        else{
+            if(lenght%2 != 0){
+                *(&message->argument) = (char *)malloc(strlen(arguments[i+1])+1);
+                strcpy(message->argument, arguments[i+1]);
+            }
+
+            if(strcmp(arguments[i],"-n") == 0){
+                message->type = NAME;
+            }
+            else if(strcmp(arguments[i],"-f") == 0){
+                message->type = FILEDIR;
+            }
+            else if(strcmp(arguments[i],"-l") == 0){
+                message->type = LIST;
+            }
+            else {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+
+
+
+int main(int argc, char* argv[]) {
+    int client_socket;
+    char* server_address;
+    long server_socket = 0;
+    TMessage *message = malloc(sizeof(*message));
+
+    if(check_arg(argv,argc,&server_socket,&server_address,message)){
+        perror("ERROR: arguments");
+        exit(EXIT_FAILURE);
+    }
+    if ((client_socket = socket(AF_INET, SOCK_STREAM, 0)) <= 0) {
+        perror("ERROR: socket");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("%d %s %ld %d %s",client_socket,server_address,server_socket, message->type, message->argument);
+    /*
+    if (connect(client_socket, (const struct sockaddr *) &server_address, sizeof(server_address)) != 0) {
+        perror("ERROR: connect");
+        exit(EXIT_FAILURE);
+    }
+     */
+    free(server_address);
+    free(message->argument);
+    free(message);
+    return 0;
+}

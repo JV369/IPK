@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/jan/IPK/proj1/client.c
+stdio.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+stdlib.h
+-
+string.h
+-
+

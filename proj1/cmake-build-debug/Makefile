@@ -123,32 +123,59 @@ proj1/fast:
 	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/build
 .PHONY : proj1/fast
 
-main.o: main.c.o
+client.o: client.c.o
 
-.PHONY : main.o
+.PHONY : client.o
 
 # target to build an object file
-main.c.o:
-	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/main.c.o
-.PHONY : main.c.o
+client.c.o:
+	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/client.c.o
+.PHONY : client.c.o
 
-main.i: main.c.i
+client.i: client.c.i
 
-.PHONY : main.i
+.PHONY : client.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/main.c.i
-.PHONY : main.c.i
+client.c.i:
+	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/client.c.i
+.PHONY : client.c.i
 
-main.s: main.c.s
+client.s: client.c.s
 
-.PHONY : main.s
+.PHONY : client.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/main.c.s
-.PHONY : main.c.s
+client.c.s:
+	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/client.c.s
+.PHONY : client.c.s
+
+server.o: server.c.o
+
+.PHONY : server.o
+
+# target to build an object file
+server.c.o:
+	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/server.c.o
+.PHONY : server.c.o
+
+server.i: server.c.i
+
+.PHONY : server.i
+
+# target to preprocess a source file
+server.c.i:
+	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/server.c.i
+.PHONY : server.c.i
+
+server.s: server.c.s
+
+.PHONY : server.s
+
+# target to generate assembly for a file
+server.c.s:
+	$(MAKE) -f CMakeFiles/proj1.dir/build.make CMakeFiles/proj1.dir/server.c.s
+.PHONY : server.c.s
 
 # Help Target
 help:
@@ -159,9 +186,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... proj1"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... client.o"
+	@echo "... client.i"
+	@echo "... client.s"
+	@echo "... server.o"
+	@echo "... server.i"
+	@echo "... server.s"
 .PHONY : help
 
 

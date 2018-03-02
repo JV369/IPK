@@ -4,7 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/jan/IPK/proj1/main.c" "/home/jan/IPK/proj1/cmake-build-debug/CMakeFiles/proj1.dir/main.c.o"
+  "/home/jan/IPK/proj1/client.c" "/home/jan/IPK/proj1/cmake-build-debug/CMakeFiles/proj1.dir/client.c.o"
+  "/home/jan/IPK/proj1/server.c" "/home/jan/IPK/proj1/cmake-build-debug/CMakeFiles/proj1.dir/server.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
