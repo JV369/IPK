@@ -3,6 +3,8 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <netdb.h>
 
 typedef enum {NAME = 30, FILEDIR, LIST}message_type;
 
@@ -54,8 +56,8 @@ int main(int argc, char* argv[]) {
     int client_socket;
     char* server_address;
     long server_socket = 0;
+    struct hostent *server_addr;
     TMessage *message = malloc(sizeof(*message));
-
     if(check_arg(argv,argc,&server_socket,&server_address,message)){
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
@@ -65,13 +67,23 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    printf("%d %s %ld %d %s",client_socket,server_address,server_socket, message->type, message->argument);
-    /*
-    if (connect(client_socket, (const struct sockaddr *) &server_address, sizeof(server_address)) != 0) {
+    server_addr = gethostbyname(server_address);
+    if (connect(client_socket, (const struct sockaddr *) &server_addr, sizeof(server_address)) != 0) {
         perror("ERROR: connect");
         exit(EXIT_FAILURE);
     }
-     */
+
+    ssize_t bytestx = send(client_socket, (char*)message, sizeof(message), 0);
+    if (bytestx < 0)
+        perror("ERROR:sendto");
+    char world[150];
+    ssize_t bytesrx = recv(client_socket, world, sizeof(world), 0);
+    if (bytesrx < 0)
+        perror("ERROR:recvfrom");
+
+    printf("%s\n",world);
+
+    close(client_socket);
     free(server_address);
     free(message->argument);
     free(message);
