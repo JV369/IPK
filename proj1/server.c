@@ -49,13 +49,25 @@ int main(int argc, char* argv[]) {
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
-    getaddrinfo(NULL, argv[2], &hints, &res);
+    if((getaddrinfo(NULL, argv[2], &hints, &res) != 0){
+        fprintf(stderr,"Cant get address");
+        exit(EXIT_FAILURE);
+    }
 
 // make a socket, bind it, and listen on it:
 
-    sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
-    bind(sockfd, res->ai_addr, res->ai_addrlen);
-    listen(sockfd, 5);
+    if((sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) <=0){
+        perror("ERROR: socket");
+        exit(EXIT_FAILURE);
+    }
+    if((bind(sockfd, res->ai_addr, res->ai_addrlen)) < 0){
+        perror("ERROR: bind");
+        exit(EXIT_FAILURE);
+    }
+    if((listen(sockfd, 5)) < 0){
+        perror("ERROR: listen");
+        exit(EXIT_FAILURE);
+    }
 
 // now accept an incoming connection:
 

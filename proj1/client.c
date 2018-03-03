@@ -73,6 +73,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr,"Error no address found");
         exit(EXIT_FAILURE);
     }
+    printf("%ld\n",server_socket);
     memset(&sin, '\0', sizeof(sin));
     sin.sin_family = AF_INET;
     sin.sin_port = htons(server_socket);
