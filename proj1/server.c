@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
-    if((getaddrinfo(NULL, argv[2], &hints, &res) != 0){
+    if((getaddrinfo(NULL, argv[2], &hints, &res)) != 0){
         fprintf(stderr,"Cant get address");
         exit(EXIT_FAILURE);
     }
