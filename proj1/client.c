@@ -57,6 +57,7 @@ int main(int argc, char* argv[]) {
     char* server_address;
     long server_socket = 0;
     struct hostent *server_addr;
+    struct sockaddr_in sin;
     TMessage *message = malloc(sizeof(*message));
     if(check_arg(argv,argc,&server_socket,&server_address,message)){
         perror("ERROR: arguments");
@@ -68,7 +69,16 @@ int main(int argc, char* argv[]) {
     }
 
     server_addr = gethostbyname(server_address);
-    if (connect(client_socket, (const struct sockaddr *) &server_addr, sizeof(server_address)) != 0) {
+    if(server_addr == NULL){
+        fprintf(stderr,"Error no address found");
+        exit(EXIT_FAILURE);
+    }
+    memset(&sin, '\0', sizeof(sin));
+    sin.sin_family = AF_INET;
+    sin.sin_port = htons(server_socket);
+    memcpy(&sin.sin_addr, server_addr->h_addr_list[0],server_addr->h_length);
+
+    if (connect(client_socket, (const struct sockaddr *) &sin, sizeof(sin)) != 0) {
         perror("ERROR: connect");
         exit(EXIT_FAILURE);
     }

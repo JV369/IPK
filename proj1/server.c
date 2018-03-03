@@ -3,6 +3,8 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <string.h>
+#include <netdb.h>
+#include <netinet/in.h>
 
 typedef enum {NAME = 30, FILEDIR, LIST}message_type;
 
@@ -34,25 +36,33 @@ int main(int argc, char* argv[]) {
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
     }
+    int comm_socket;
+    struct sockaddr_storage their_addr;
+    socklen_t addr_size;
+    struct addrinfo hints, *res;
+    int sockfd;
 
-    struct sockaddr addr, client_addr;
-    memset(&addr,0,sizeof(addr));
-    addr.sa_family = AF_INET;
-    if ((bind(server_socket, &addr, sizeof(addr))) < 0)
-    {
-        perror("ERROR: bind");
-        exit(EXIT_FAILURE);
-    }
+// first, load up address structs with getaddrinfo():
 
-    if ((listen(server_socket, 5)) < 0) {
-        perror("ERROR: listen");
-        exit(EXIT_FAILURE);
-    }
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
-    memset(&addr,0,sizeof(client_addr));
-    client_addr.sa_family = AF_INET;
-    socklen_t client_addr_len = sizeof client_addr;
-    int comm_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_len);
+    getaddrinfo(NULL, argv[2], &hints, &res);
+
+// make a socket, bind it, and listen on it:
+
+    sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    bind(sockfd, res->ai_addr, res->ai_addrlen);
+    listen(sockfd, 5);
+
+// now accept an incoming connection:
+
+    addr_size = sizeof their_addr;
+    comm_socket = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+
+// ready to communicate on socket descriptor new_fd!
     if (comm_socket > 0)
     {
         char world[150] = "hello,world!";
