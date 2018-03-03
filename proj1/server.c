@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
     if((getaddrinfo(NULL, argv[2], &hints, &res)) != 0){
-        fprintf(stderr,"Cant get address");
+        fprintf(stderr,"Cant get address\n");
         exit(EXIT_FAILURE);
     }
 
@@ -60,15 +60,17 @@ int main(int argc, char* argv[]) {
         perror("ERROR: socket");
         exit(EXIT_FAILURE);
     }
+    printf("Socket aquired\n");
     if((bind(sockfd, res->ai_addr, res->ai_addrlen)) < 0){
         perror("ERROR: bind");
         exit(EXIT_FAILURE);
     }
+    printf("Bind succesfull\n");
     if((listen(sockfd, 5)) < 0){
         perror("ERROR: listen");
         exit(EXIT_FAILURE);
     }
-
+    printf("Accepting...\n");
 // now accept an incoming connection:
 
     addr_size = sizeof their_addr;
@@ -78,8 +80,10 @@ int main(int argc, char* argv[]) {
     if (comm_socket > 0)
     {
         char world[150] = "hello,world!";
+        printf("Recieving...\n");
         recv(comm_socket,(char*)message,sizeof(message),0);
         if(message->type == NAME){
+            printf("Sending...\n");
             send(comm_socket,world,sizeof(world),0);
         }
     }
