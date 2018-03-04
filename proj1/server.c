@@ -62,8 +62,8 @@ void send_list(char *seed,int socket,char **end){
         else{
             if(strncmp(seed,token,strlen(seed)) == 0){
                 strcat(message,token);
-                send(socket,message,1024,0);
             }
+            send(socket,message,1024,0);
         }
         recv(socket,recv_mess,1024,0);
         if(strcmp(recv_mess,"CONTINUE") != 0){

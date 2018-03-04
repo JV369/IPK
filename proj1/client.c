@@ -93,7 +93,8 @@ int main(int argc, char* argv[]) {
     token = strtok(message_recv,"#");
     while(strcmp(token,"SEND_MORE") == 0){
         token = strtok(NULL,"#");
-        printf("%s\n",token);
+        if(token != NULL)
+            printf("%s\n",token);
         strcpy(message,"CONTINUE");
         send(client_socket,message,1024,0);
         recv(client_socket, message_recv, 1024, 0);

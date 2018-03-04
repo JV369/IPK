@@ -36,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="client.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="client.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="714">
-              <caret line="103" column="8" lean-forward="false" selection-start-line="103" selection-start-column="8" selection-end-line="103" selection-end-column="8" />
+            <state relative-caret-position="588">
+              <caret line="96" column="12" lean-forward="false" selection-start-line="96" selection-start-column="12" selection-end-line="96" selection-end-column="12" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -48,11 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.c" pinned="false" current-in-tab="true">
+      <file leaf-file-name="server.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="588">
-              <caret line="74" column="29" lean-forward="false" selection-start-line="74" selection-start-column="29" selection-end-line="74" selection-end-column="29" />
+            <state relative-caret-position="624">
+              <caret line="65" column="40" lean-forward="false" selection-start-line="65" selection-start-column="40" selection-end-line="65" selection-end-column="40" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -90,8 +90,8 @@
         <option value="$PROJECT_DIR$/main.c" />
         <option value="$PROJECT_DIR$/Makefile" />
         <option value="$PROJECT_DIR$/test.c" />
-        <option value="$PROJECT_DIR$/client.c" />
         <option value="$PROJECT_DIR$/server.c" />
+        <option value="$PROJECT_DIR$/client.c" />
       </list>
     </option>
   </component>
@@ -341,12 +341,12 @@
       <workItem from="1520023586157" duration="5331000" />
       <workItem from="1520066953173" duration="12272000" />
       <workItem from="1520153472045" duration="9651000" />
-      <workItem from="1520188874783" duration="3276000" />
+      <workItem from="1520188874783" duration="3939000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39349000" />
+    <option name="totallyTimeSpent" value="40012000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -574,20 +574,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client.c">
+    <entry file="file://$PROJECT_DIR$/server.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="103" column="8" lean-forward="false" selection-start-line="103" selection-start-column="8" selection-end-line="103" selection-end-column="8" />
+        <state relative-caret-position="624">
+          <caret line="65" column="40" lean-forward="false" selection-start-line="65" selection-start-column="40" selection-end-line="65" selection-end-column="40" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.c">
+    <entry file="file://$PROJECT_DIR$/client.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="588">
-          <caret line="74" column="29" lean-forward="false" selection-start-line="74" selection-start-column="29" selection-end-line="74" selection-end-column="29" />
+          <caret line="96" column="12" lean-forward="false" selection-start-line="96" selection-start-column="12" selection-end-line="96" selection-end-column="12" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
