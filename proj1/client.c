@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     int client_socket;
     char* server_address;
     char *server_socket;
-    char*message = (char *)malloc(1024);
+    char*message = (char *)malloc(1024 * sizeof(char));
     if(check_arg(argv,argc,&server_socket,&server_address,&message)){
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
@@ -81,13 +81,13 @@ int main(int argc, char* argv[]) {
     }
     printf("Connected\n");
 
-    ssize_t bytestx = send(client_socket, message, sizeof(message), 0);
+    ssize_t bytestx = send(client_socket, message, 1024, 0);
     if (bytestx < 0)
         perror("ERROR:sendto");
 
-    char *message_recv = (char *)malloc(sizeof(1024));
+    char *message_recv = (char *)malloc(1024 * sizeof(char));
 
-    ssize_t bytesrx = recv(client_socket, message_recv, sizeof(message_recv), 0);
+    ssize_t bytesrx = recv(client_socket, message_recv, 1024, 0);
     if (bytesrx < 0)
         perror("ERROR:recvfrom");
 

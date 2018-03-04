@@ -95,16 +95,16 @@ int main(int argc, char* argv[]) {
 
         // ready to communicate on socket descriptor new_fd!
         if (comm_socket > 0) {
-            char *message = (char *) malloc(1024);
-            char *recv_messager = (char *) malloc(1024);
-            recv(comm_socket, message, sizeof(message), 0);
+            char *message = (char *) malloc(1024 * sizeof(char));
+            char *recv_messager = (char *) malloc(1024 * sizeof(char));
+            recv(comm_socket, message, 1024, 0);
             printf("Recieved %s\n",message);
             char *token = strtok(message, "/");
             if (strcmp(token, "NAME") == 0) {
-                token = strtok(NULL, "/")
+                token = strtok(NULL, "/");
                 find_login(token, &recv_messager);
                 printf("Sending %s\n",recv_messager);
-                send(comm_socket, recv_messager, sizeof(recv_messager), 0);
+                send(comm_socket, recv_messager, 1024, 0);
             }
             free(message);
             free(recv_messager);
