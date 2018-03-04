@@ -1,3 +1,4 @@
+#define __GNU_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -6,12 +7,18 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
-typedef enum {NAME = 30, FILEDIR, LIST}message_type;
+
+
+typedef enum {NAME = 30, FILEDIR, LIST, SEND_END, NOT_FOUND}message_type;
+
+
 
 typedef struct Message{
     message_type type;
     char *argument;
 }TMessage;
+
+
 
 int check_arg(char **arguments,int lenght, long *socket){
     if(lenght == 3){
@@ -28,9 +35,30 @@ int check_arg(char **arguments,int lenght, long *socket){
     return 0;
 }
 
+int find_login(char *login, char **result){
+    FILE *fd;
+    char *line;
+    size_t lenght;
+    fd = fopen("/etc/passwd","r");
+    while((getline(&line,&lenght,fd)) != -1){
+        char *token = strtok(line,":");
+        if(strcmp(token,login) == 0){
+            for(int i = 0; i < 3; i++) {
+                token = strtok(NULL, ":");
+            }
+            *result = (char *)malloc(sizeof(lenght));
+            strcpy(*result,token);
+            fclose(fd);
+            return 0;
+        }
+    }
+    fclose(fd);
+    return 1;
+}
+
+
 int main(int argc, char* argv[]) {
     long server_socket;
-    TMessage *message = malloc(sizeof(*message));
 
     if(check_arg(argv,argc,&server_socket)){
         perror("ERROR: arguments");
@@ -45,9 +73,9 @@ int main(int argc, char* argv[]) {
 // first, load up address structs with getaddrinfo():
 
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_INET;  // use IPv4 or IPv6, whichever
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
+    hints.ai_flags = AI_PASSIVE;
 
     if((getaddrinfo(NULL, argv[2], &hints, &res)) != 0){
         fprintf(stderr,"Cant get address\n");
@@ -74,20 +102,26 @@ int main(int argc, char* argv[]) {
 // now accept an incoming connection:
 
     addr_size = sizeof their_addr;
-    comm_socket = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+    while(1) {
+        comm_socket = accept(sockfd, (struct sockaddr *) &their_addr, &addr_size);
 
-// ready to communicate on socket descriptor new_fd!
-    if (comm_socket > 0)
-    {
-        char world[150] = "hello,world!";
-        printf("Recieving...\n");
-        recv(comm_socket,(char*)message,sizeof(message),0);
-        if(message->type == NAME){
-            printf("Sending...\n");
-            send(comm_socket,world,sizeof(world),0);
+        // ready to communicate on socket descriptor new_fd!
+        if (comm_socket > 0) {
+            TMessage *message = malloc(sizeof(*message));
+            TMessage *send_message = malloc(sizeof(*message));
+            recv(comm_socket, (char *) message, sizeof(message), 0);
+            if (message->type == NAME) {
+                if(find_login(message->argument,&(send_message->argument)) == 0){
+                    send_message->type = SEND_END;
+                }
+                else{
+                    send_message->type = NOT_FOUND;
+                }
+            }
+            send(comm_socket, (char *)send_message, sizeof(send_message), 0);
         }
     }
 
-    free(message);
+
     return 0;
 }

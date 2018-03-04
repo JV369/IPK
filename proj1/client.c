@@ -7,7 +7,7 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 
-typedef enum {NAME = 30, FILEDIR, LIST}message_type;
+typedef enum {NAME = 30, FILEDIR, LIST, SEND_END, NOT_FOUND}message_type;
 
 typedef struct Message{
     message_type type;
