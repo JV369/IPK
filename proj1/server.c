@@ -23,14 +23,14 @@ int check_arg(char **arguments,int lenght, long *socket){
     return 0;
 }
 
-int find_login(char *login, char **result){
+int find_login(char *login, char **result, int offset){
     FILE *fd;
     char line[255];
     fd = fopen("/etc/passwd","r");
     while((fgets(line,255,fd)) != NULL){
         char *token = strtok(line,":");
         if(strcmp(token,login) == 0){
-            for(int i = 0; i < 4; i++) {
+            for(int i = 0; i < offset; i++) {
                 token = strtok(NULL, ":");
             }
             strcpy(*result,"SEND_END/");
@@ -102,10 +102,15 @@ int main(int argc, char* argv[]) {
             char *token = strtok(message, "/");
             if (strcmp(token, "NAME") == 0) {
                 token = strtok(NULL, "/");
-                find_login(token, &recv_messager);
+                find_login(token, &recv_messager,4);
                 printf("Sending %s\n",recv_messager);
-                send(comm_socket, recv_messager, 1024, 0);
             }
+            else if(strcmp(token,"FILEDIR") == 0){
+                token = strtok(NULL, "/");
+                find_login(token, &recv_messager,5);
+                printf("Sending %s\n",recv_messager);
+            }
+            send(comm_socket, recv_messager, 1024, 0);
             free(message);
             free(recv_messager);
         }

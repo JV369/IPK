@@ -86,12 +86,13 @@ int main(int argc, char* argv[]) {
         perror("ERROR:sendto");
 
     char *message_recv = (char *)malloc(1024 * sizeof(char));
-
+    char *token;
     ssize_t bytesrx = recv(client_socket, message_recv, 1024, 0);
     if (bytesrx < 0)
         perror("ERROR:recvfrom");
-
-    printf("%s\n",message_recv);
+    token = strtok(message_recv,"/");
+    token = strtok(NULL,"/");
+    printf("%s\n",token);
 
     close(client_socket);
     free(server_address);

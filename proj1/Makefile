@@ -13,5 +13,5 @@ test:
 	gcc -g -std=c99 -Wall -pedantic -o test test.c -D_XOPEN_SOURCE=600 -lpthread
 
 clean:
-	rm client server test
+	rm client server
 
