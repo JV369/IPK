@@ -33,13 +33,13 @@ int find_login(char *login, char **result, int offset){
             for(int i = 0; i < offset; i++) {
                 token = strtok(NULL, ":");
             }
-            strcpy(*result,"SEND_END/");
+            strcpy(*result,"SEND_END#");
             strcat(*result,token);
             fclose(fd);
             return 0;
         }
     }
-    strcpy(*result,"NOT_FOUND/");
+    strcpy(*result,"NOT_FOUND#");
     fclose(fd);
     return 1;
 }
@@ -99,14 +99,14 @@ int main(int argc, char* argv[]) {
             char *recv_messager = (char *) malloc(1024 * sizeof(char));
             recv(comm_socket, message, 1024, 0);
             printf("Recieved %s\n",message);
-            char *token = strtok(message, "/");
+            char *token = strtok(message, "#");
             if (strcmp(token, "NAME") == 0) {
-                token = strtok(NULL, "/");
+                token = strtok(NULL, "#");
                 find_login(token, &recv_messager,4);
                 printf("Sending %s\n",recv_messager);
             }
             else if(strcmp(token,"FILEDIR") == 0){
-                token = strtok(NULL, "/");
+                token = strtok(NULL, "#");
                 find_login(token, &recv_messager,5);
                 printf("Sending %s\n",recv_messager);
             }

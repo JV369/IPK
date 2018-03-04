@@ -23,13 +23,13 @@ int check_arg(char **arguments,int lenght, char **socket, char **address, char *
         }
         else{
             if(strcmp(arguments[i],"-n") == 0){
-                strcpy(*message,"NAME/");
+                strcpy(*message,"NAME#");
             }
             else if(strcmp(arguments[i],"-f") == 0){
-                strcpy(*message,"FILEDIR/");
+                strcpy(*message,"FILEDIR#");
             }
             else if(strcmp(arguments[i],"-l") == 0){
-                strcpy(*message,"LIST/");
+                strcpy(*message,"LIST#");
             }
             else {
                 return 1;
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
     if (bytesrx < 0)
         perror("ERROR:recvfrom");
     token = strtok(message_recv,"/");
-    token = strtok(NULL,"/");
+    token = strtok(NULL,"#");
     printf("%s\n",token);
 
     close(client_socket);
