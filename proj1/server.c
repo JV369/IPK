@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -37,16 +36,15 @@ int check_arg(char **arguments,int lenght, long *socket){
 
 int find_login(char *login, char **result){
     FILE *fd;
-    char *line;
-    size_t lenght;
+    char line[255];
     fd = fopen("/etc/passwd","r");
-    while((getline(&line,&lenght,fd)) != -1){
+    while((fgets(line,255,fd)) != NULL){
         char *token = strtok(line,":");
         if(strcmp(token,login) == 0){
             for(int i = 0; i < 3; i++) {
                 token = strtok(NULL, ":");
             }
-            *result = (char *)malloc(sizeof(lenght));
+            *result = (char *)malloc(strlen(token)+1);
             strcpy(*result,token);
             fclose(fd);
             return 0;

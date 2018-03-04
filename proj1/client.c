@@ -92,16 +92,20 @@ int main(int argc, char* argv[]) {
     ssize_t bytestx = send(client_socket, (char*)message, sizeof(message), 0);
     if (bytestx < 0)
         perror("ERROR:sendto");
-    char world[150];
-    ssize_t bytesrx = recv(client_socket, world, sizeof(world), 0);
+
+    TMessage *message_recv = malloc(sizeof(*message_recv));
+
+    ssize_t bytesrx = recv(client_socket, (char *)message_recv, sizeof(message_recv), 0);
     if (bytesrx < 0)
         perror("ERROR:recvfrom");
 
-    printf("%s\n",world);
+    printf("%s\n",message_recv->argument);
 
     close(client_socket);
     free(server_address);
     free(message->argument);
     free(message);
+    free(message_recv->argument);
+    free(message_recv);
     return 0;
 }
