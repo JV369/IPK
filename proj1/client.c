@@ -7,15 +7,8 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 
-typedef enum {NAME = 30, FILEDIR, LIST, SEND_END, NOT_FOUND}message_type;
 
-typedef struct Message{
-    message_type type;
-    char *argument;
-}TMessage;
-
-
-int check_arg(char **arguments,int lenght, char **socket, char **address, TMessage *message){
+int check_arg(char **arguments,int lenght, char **socket, char **address, char **message){
     if(lenght > 7 || lenght < 6){
         return 1;
     }
@@ -29,22 +22,21 @@ int check_arg(char **arguments,int lenght, char **socket, char **address, TMessa
             strcpy(*socket,arguments[i+1]);
         }
         else{
-            if(lenght%2 != 0){
-                *(&message->argument) = (char *)malloc(strlen(arguments[i+1])+1);
-                strcpy(message->argument, arguments[i+1]);
-            }
-
             if(strcmp(arguments[i],"-n") == 0){
-                message->type = NAME;
+                strcpy(*message,"NAME/");
             }
             else if(strcmp(arguments[i],"-f") == 0){
-                message->type = FILEDIR;
+                strcpy(*message,"FILEDIR/");
             }
             else if(strcmp(arguments[i],"-l") == 0){
-                message->type = LIST;
+                strcpy(*message,"LIST/");
             }
             else {
                 return 1;
+            }
+
+            if(lenght%2 != 0){
+                strcat(*message,arguments[i+1]);
             }
         }
     }
@@ -58,8 +50,8 @@ int main(int argc, char* argv[]) {
     int client_socket;
     char* server_address;
     char *server_socket;
-    TMessage *message = malloc(sizeof(*message));
-    if(check_arg(argv,argc,&server_socket,&server_address,message)){
+    char*message = (char *)malloc(1024);
+    if(check_arg(argv,argc,&server_socket,&server_address,&message)){
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
     }
@@ -89,23 +81,21 @@ int main(int argc, char* argv[]) {
     }
     printf("Connected\n");
 
-    ssize_t bytestx = send(client_socket, (char*)message, sizeof(message), 0);
+    ssize_t bytestx = send(client_socket, message, sizeof(message), 0);
     if (bytestx < 0)
         perror("ERROR:sendto");
 
-    TMessage *message_recv = malloc(sizeof(*message_recv));
+    char *message_recv = (char *)malloc(sizeof(1024));
 
-    ssize_t bytesrx = recv(client_socket, (char *)message_recv, sizeof(message_recv), 0);
+    ssize_t bytesrx = recv(client_socket, message_recv, sizeof(message_recv), 0);
     if (bytesrx < 0)
         perror("ERROR:recvfrom");
 
-    printf("%s\n",message_recv->argument);
+    printf("%s\n",message_recv);
 
     close(client_socket);
     free(server_address);
-    free(message->argument);
     free(message);
-    free(message_recv->argument);
     free(message_recv);
     return 0;
 }

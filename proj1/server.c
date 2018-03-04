@@ -8,17 +8,6 @@
 
 
 
-typedef enum {NAME = 30, FILEDIR, LIST, SEND_END, NOT_FOUND}message_type;
-
-
-
-typedef struct Message{
-    message_type type;
-    char *argument;
-}TMessage;
-
-
-
 int check_arg(char **arguments,int lenght, long *socket){
     if(lenght == 3){
         if(strcmp(arguments[1],"-p") == 0){
@@ -44,12 +33,13 @@ int find_login(char *login, char **result){
             for(int i = 0; i < 3; i++) {
                 token = strtok(NULL, ":");
             }
-            *result = (char *)malloc(strlen(token)+1);
-            strcpy(*result,token);
+            strcpy(*result,"SEND_END/");
+            strcat(*result,token);
             fclose(fd);
             return 0;
         }
     }
+    strcpy(*result,"NOT_FOUND/");
     fclose(fd);
     return 1;
 }
@@ -105,21 +95,16 @@ int main(int argc, char* argv[]) {
 
         // ready to communicate on socket descriptor new_fd!
         if (comm_socket > 0) {
-            TMessage *message = malloc(sizeof(*message));
-            TMessage *send_message = malloc(sizeof(*message));
-            recv(comm_socket, (char *) message, sizeof(message), 0);
-            if (message->type == NAME) {
-                if(find_login(message->argument,&(send_message->argument)) == 0){
-                    send_message->type = SEND_END;
-                }
-                else{
-                    send_message->type = NOT_FOUND;
-                }
+            char *message = (char *) malloc(1024);
+            char *recv_messager = (char *) malloc(1024);
+            recv(comm_socket, message, sizeof(message), 0);
+            char *token = strtok(message, "/");
+            if (strcmp(token, "NAME") == 0) {
+                find_login(strtok(NULL, "/"), &recv_messager);
+                send(comm_socket, recv_messager, sizeof(recv_messager), 0);
             }
-            send(comm_socket, (char *)send_message, sizeof(send_message), 0);
         }
     }
-
 
     return 0;
 }
