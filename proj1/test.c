@@ -11,7 +11,7 @@ int main(){
     while((fgets(line,255,fd)) != NULL){
         char *token = strtok(line,":");
         if(strcmp(token,login) == 0){
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < 4; i++) {
                 token = strtok(NULL, ":");
             }
             strcpy(result,"SEND_END/");

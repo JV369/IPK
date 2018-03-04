@@ -30,7 +30,7 @@ int find_login(char *login, char **result){
     while((fgets(line,255,fd)) != NULL){
         char *token = strtok(line,":");
         if(strcmp(token,login) == 0){
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < 4; i++) {
                 token = strtok(NULL, ":");
             }
             strcpy(*result,"SEND_END/");
@@ -98,9 +98,12 @@ int main(int argc, char* argv[]) {
             char *message = (char *) malloc(1024);
             char *recv_messager = (char *) malloc(1024);
             recv(comm_socket, message, sizeof(message), 0);
+            printf("Recieved %s\n",message);
             char *token = strtok(message, "/");
             if (strcmp(token, "NAME") == 0) {
-                find_login(strtok(NULL, "/"), &recv_messager);
+                token = strtok(NULL, "/")
+                find_login(token, &recv_messager);
+                printf("Sending %s\n",recv_messager);
                 send(comm_socket, recv_messager, sizeof(recv_messager), 0);
             }
             free(message);
