@@ -103,6 +103,8 @@ int main(int argc, char* argv[]) {
                 find_login(strtok(NULL, "/"), &recv_messager);
                 send(comm_socket, recv_messager, sizeof(recv_messager), 0);
             }
+            free(message);
+            free(recv_messager);
         }
     }
 

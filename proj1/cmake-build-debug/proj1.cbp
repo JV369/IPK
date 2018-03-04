@@ -90,6 +90,9 @@
 		<Unit filename="/home/jan/IPK/proj1/server.c">
 			<Option target="proj1"/>
 		</Unit>
+		<Unit filename="/home/jan/IPK/proj1/test.c">
+			<Option target="proj1"/>
+		</Unit>
 		<Unit filename="/home/jan/IPK/proj1/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
