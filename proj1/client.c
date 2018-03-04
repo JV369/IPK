@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     int client_socket;
     char* server_address;
     char *server_socket;
-    char*message = (char *)malloc(1024 * sizeof(char));
+    char *message = (char *)malloc(1024 * sizeof(char));
     if(check_arg(argv,argc,&server_socket,&server_address,&message)){
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
@@ -90,9 +90,18 @@ int main(int argc, char* argv[]) {
     ssize_t bytesrx = recv(client_socket, message_recv, 1024, 0);
     if (bytesrx < 0)
         perror("ERROR:recvfrom");
-    token = strtok(message_recv,"/");
+    token = strtok(message_recv,"#");
+    while(strcmp(token,"SEND_MORE") == 0){
+        token = strtok(NULL,"#");
+        printf("%s\n",token);
+        strcpy(message,"CONTINUE");
+        send(client_socket,message,1024,0);
+        recv(client_socket, message_recv, 1024, 0);
+        token = strtok(message_recv,"#");
+    }
     token = strtok(NULL,"#");
-    printf("%s\n",token);
+    if(token != NULL)
+        printf("%s\n",token);
 
     close(client_socket);
     free(server_address);
