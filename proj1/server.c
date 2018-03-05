@@ -60,40 +60,46 @@ int find_login(char *login, char **result, int offset){
 }
 
 
-void send_list(char *seed,int socket,char **end){
+void send_list(char *seed,int socket,char **end) {
     FILE *fd;
     char line[255];
-    fd = fopen("/etc/passwd","r");
-    char *message = (char *)malloc(1024 * sizeof(char));
-    char *recv_mess = (char *)malloc(1024 * sizeof(char));
-    while((fgets(line,255,fd)) != NULL){
+    fd = fopen("/etc/passwd", "r");
+    int found = 0;
+    char *message = (char *) malloc(1024 * sizeof(char));
+    char *recv_mess = (char *) malloc(1024 * sizeof(char));
+    while ((fgets(line, 255, fd)) != NULL) {
 
-        strcpy(message,"SEND_MORE#");
-        char *token = strtok(line,":");
-        if(seed == NULL){
-            strcat(message,token);
-            send(socket,message,1024,0);
-        }
-        else{
-            if(strncmp(seed,token,strlen(seed)) == 0){
-                strcat(message,token);
+        strcpy(message, "SEND_MORE#");
+        char *token = strtok(line, ":");
+        if (seed == NULL) {
+            found = 1;
+            strcat(message, token);
+        } else {
+            if (strncmp(seed, token, strlen(seed)) == 0) {
+                strcat(message, token);
+                found = 1;
             }
-            send(socket,message,1024,0);
         }
-        recv(socket,recv_mess,1024,0);
-        if(strcmp(recv_mess,"CONTINUE") != 0){
+        send(socket, message, 1024, 0);
+        recv(socket, recv_mess, 1024, 0);
+        if (strcmp(recv_mess, "CONTINUE") != 0) {
             break;
         }
     }
     free(message);
     free(recv_mess);
-    strcpy(*end,"SEND_END#");
+    if (found)
+        strcpy(*end, "SEND_END#");
+    else
+        strcpy(*end, "NOT_FOUND#");
 }
+
 
 void sighandler(){
     close(comm_socket);
     exit(0);
 }
+
 
 int main(int argc, char* argv[]) {
     if(check_arg(argv,argc)){
