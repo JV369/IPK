@@ -5,13 +5,27 @@
 #include <string.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <ctype.h>
+#include <bits/signum.h>
+#include <signal.h>
+#include <unistd.h>
 
+int comm_socket;
 
+int isNum(char *arg){
+    for (int i = 0; i < strlen(arg); ++i) {
+        if(!isdigit(arg[i])){
+            return 1;
+        }
+    }
+    return 0;
+}
 
-int check_arg(char **arguments,int lenght, long *socket){
+int check_arg(char **arguments,int lenght){
     if(lenght == 3){
         if(strcmp(arguments[1],"-p") == 0){
-            *socket = strtol(arguments[2],NULL,10);
+            if(isNum(arguments[2]))
+                return 1;
         }
         else{
             return 1;
@@ -40,6 +54,7 @@ int find_login(char *login, char **result, int offset){
         }
     }
     strcpy(*result,"NOT_FOUND#");
+    strcat(*result,login);
     fclose(fd);
     return 1;
 }
@@ -75,19 +90,21 @@ void send_list(char *seed,int socket,char **end){
     strcpy(*end,"SEND_END#");
 }
 
-int main(int argc, char* argv[]) {
-    long server_socket;
+void sighandler(){
+    close(comm_socket);
+    exit(0);
+}
 
-    if(check_arg(argv,argc,&server_socket)){
+int main(int argc, char* argv[]) {
+    if(check_arg(argv,argc)){
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
     }
-    int comm_socket;
     struct sockaddr_storage their_addr;
     socklen_t addr_size;
     struct addrinfo hints, *res;
     int sockfd;
-
+    signal(SIGINT, sighandler);
 // first, load up address structs with getaddrinfo():
 
     memset(&hints, 0, sizeof(hints));
@@ -106,17 +123,16 @@ int main(int argc, char* argv[]) {
         perror("ERROR: socket");
         exit(EXIT_FAILURE);
     }
-    printf("Socket aquired\n");
     if((bind(sockfd, res->ai_addr, res->ai_addrlen)) < 0){
         perror("ERROR: bind");
         exit(EXIT_FAILURE);
     }
-    printf("Bind succesfull\n");
+
     if((listen(sockfd, 5)) < 0){
         perror("ERROR: listen");
         exit(EXIT_FAILURE);
     }
-    printf("Accepting...\n");
+
 // now accept an incoming connection:
 
     addr_size = sizeof their_addr;
@@ -127,18 +143,20 @@ int main(int argc, char* argv[]) {
         if (comm_socket > 0) {
             char *message = (char *) malloc(1024 * sizeof(char));
             char *recv_messager = (char *) malloc(1024 * sizeof(char));
+
+            recv(comm_socket,message,1024,0);
+            strcpy(recv_messager,"Yes,i am there!");
+            send(comm_socket,recv_messager,1024,0);
+
             recv(comm_socket, message, 1024, 0);
-            printf("Recieved %s\n",message);
             char *token = strtok(message, "#");
             if (strcmp(token, "NAME") == 0) {
                 token = strtok(NULL, "#");
                 find_login(token, &recv_messager,4);
-                printf("Sending %s\n",recv_messager);
             }
             else if(strcmp(token,"FILEDIR") == 0){
                 token = strtok(NULL, "#");
                 find_login(token, &recv_messager,5);
-                printf("Sending %s\n",recv_messager);
             }
             else if(strcmp(token,"LIST") == 0){
                 token = strtok(NULL, "#");
@@ -149,6 +167,4 @@ int main(int argc, char* argv[]) {
             free(recv_messager);
         }
     }
-
-    return 0;
 }

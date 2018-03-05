@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
     char* server_address;
     char *server_socket;
     char *message = (char *)malloc(1024 * sizeof(char));
+    char *message_recv = (char *)malloc(1024 * sizeof(char));
     if(check_arg(argv,argc,&server_socket,&server_address,&message)){
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
@@ -61,35 +62,37 @@ int main(int argc, char* argv[]) {
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET; // use AF_INET6 to force IPv6
     hints.ai_socktype = SOCK_STREAM;
-
     if ((rv = getaddrinfo(server_address, server_socket, &hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
         exit(1);
     }
 
-    printf("Address aquired\n");
-
     if ((client_socket = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol)) == -1) {
         perror("ERROR: socket");
         exit(EXIT_FAILURE);
     }
-    printf("Socket aquired\n");
 
     if (connect(client_socket, servinfo->ai_addr, servinfo->ai_addrlen) == -1) {
         perror("ERROR: connect");
         exit(EXIT_FAILURE);
     }
-    printf("Connected\n");
+    strcpy(message,"Are you there?");
+    send(client_socket,message,1024,0);
+    recv(client_socket,message_recv,1024,0);
+    if(strcmp(message_recv,"Yes,i am there!") != 0){
+        fprintf(stderr,"Cannot reach the server\n");
+        exit(EXIT_FAILURE);
+    }
 
     ssize_t bytestx = send(client_socket, message, 1024, 0);
     if (bytestx < 0)
         perror("ERROR:sendto");
 
-    char *message_recv = (char *)malloc(1024 * sizeof(char));
     char *token;
     ssize_t bytesrx = recv(client_socket, message_recv, 1024, 0);
     if (bytesrx < 0)
         perror("ERROR:recvfrom");
+
     token = strtok(message_recv,"#");
     while(strcmp(token,"SEND_MORE") == 0){
         token = strtok(NULL,"#");
@@ -99,6 +102,12 @@ int main(int argc, char* argv[]) {
         send(client_socket,message,1024,0);
         recv(client_socket, message_recv, 1024, 0);
         token = strtok(message_recv,"#");
+    }
+
+    if(strcmp(token,"NOT_FOUND") == 0){
+        token = strtok(NULL,"#");
+        fprintf(stderr,"No login %s found\n",token);
+        exit(EXIT_FAILURE);
     }
     token = strtok(NULL,"#");
     if(token != NULL)
