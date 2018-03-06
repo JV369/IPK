@@ -1,3 +1,11 @@
+/**
+ * IPK projekt 1, Varianta 1: Klient-server pro získání informace o uživatelích (Server)
+ * Jan Vávra, xvavra20
+ * kody pro zahajeni komunikace (jsou vyznačeny) jsou převzaty z http://beej.us/guide/bgnet/html/multi/index.html
+ * přezvaté kody spadají pod "public domain" http://beej.us/guide/bgnet/html/multi/intro.html#copyright
+ */
+
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -10,8 +18,14 @@
 #include <signal.h>
 #include <unistd.h>
 
+//soket, na kterém komunikuje klient se serverem
 int comm_socket;
 
+/**
+ * @brief zkontroluje jestli je řetězec číslo
+ * @param arg řetězec znaků
+ * @return 0 pokud je řetězec číslo, jinak 1
+ */
 int isNum(char *arg){
     for (int i = 0; i < strlen(arg); ++i) {
         if(!isdigit(arg[i])){
@@ -21,6 +35,12 @@ int isNum(char *arg){
     return 0;
 }
 
+/**
+ * @brief zkontroluje argumenty na vstupu
+ * @param arguments pole argumentů
+ * @param lenght počet argumentů na vstupu
+ * @return 0 při správných argumentech na vstupu, jinak 1
+ */
 int check_arg(char **arguments,int lenght){
     if(lenght == 3){
         if(strcmp(arguments[1],"-p") == 0){
@@ -37,6 +57,13 @@ int check_arg(char **arguments,int lenght){
     return 0;
 }
 
+/**
+ * @brief pomocná funkce pro -n a -f pro práci z /etc/passwd
+ * @param login uživatelské jméno které má najít
+ * @param result výsledný řetězec
+ * @param offset číslo značící který sloupec má vrátit
+ * @return 0 při nalezení loginu, jinak 1
+ */
 int find_login(char *login, char **result, int offset){
     FILE *fd;
     char line[255];
@@ -59,7 +86,12 @@ int find_login(char *login, char **result, int offset){
     return 1;
 }
 
-
+/**
+ * @brief pomocná funkce pro -l
+ * @param seed řetězec znaků podle kterých má vyhledávat login
+ * @param socket soket,na který má výstup posílat
+ * @param end výstupní řetězec po skončení funkce
+ */
 void send_list(char *seed,int socket,char **end) {
     FILE *fd;
     char line[255];
@@ -90,11 +122,15 @@ void send_list(char *seed,int socket,char **end) {
     free(recv_mess);
     if (found)
         strcpy(*end, "SEND_END#");
-    else
+    else {
         strcpy(*end, "NOT_FOUND#");
+        strcat(*end, seed);
+    }
 }
 
-
+/**
+ * @brief odchytávač SIGINT
+ */
 void sighandler(){
     close(comm_socket);
     exit(0);
@@ -106,13 +142,15 @@ int main(int argc, char* argv[]) {
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
     }
+
+    //##prevzaty kod##
     struct sockaddr_storage their_addr;
     socklen_t addr_size;
     struct addrinfo hints, *res;
     int sockfd;
     signal(SIGINT, sighandler);
-// first, load up address structs with getaddrinfo():
 
+    //pripravíme se strukturu pro info o serveru
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
@@ -123,12 +161,13 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-// make a socket, bind it, and listen on it:
-
+    //vytvoříme socket
     if((sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) <=0){
         perror("ERROR: socket");
         exit(EXIT_FAILURE);
     }
+
+    //bindnem socket
     if((bind(sockfd, res->ai_addr, res->ai_addrlen)) < 0){
         perror("ERROR: bind");
         exit(EXIT_FAILURE);
@@ -138,9 +177,9 @@ int main(int argc, char* argv[]) {
         perror("ERROR: listen");
         exit(EXIT_FAILURE);
     }
+    //##konec prevzateho kodu##
 
-// now accept an incoming connection:
-
+    //nyní budueme příjmat zpávy od klientů
     addr_size = sizeof their_addr;
     while(1) {
         comm_socket = accept(sockfd, (struct sockaddr *) &their_addr, &addr_size);
