@@ -181,35 +181,37 @@ int main(int argc, char* argv[]) {
 
     //nyní budueme příjmat zpávy od klientů
     addr_size = sizeof their_addr;
+    pid_t pid;
     while(1) {
         comm_socket = accept(sockfd, (struct sockaddr *) &their_addr, &addr_size);
-
+        pid = fork();
         // ready to communicate on socket descriptor new_fd!
         if (comm_socket > 0) {
-            char *message = (char *) malloc(1024 * sizeof(char));
-            char *recv_messager = (char *) malloc(1024 * sizeof(char));
+            if(pid == 0) {
+                char *message = (char *) malloc(1024 * sizeof(char));
+                char *recv_messager = (char *) malloc(1024 * sizeof(char));
 
-            recv(comm_socket,message,1024,0);
-            strcpy(recv_messager,"Yes,i am there!");
-            send(comm_socket,recv_messager,1024,0);
+                recv(comm_socket, message, 1024, 0);
+                strcpy(recv_messager, "Yes,i am there!");
+                send(comm_socket, recv_messager, 1024, 0);
 
-            recv(comm_socket, message, 1024, 0);
-            char *token = strtok(message, "#");
-            if (strcmp(token, "NAME") == 0) {
-                token = strtok(NULL, "#");
-                find_login(token, &recv_messager,4);
+                recv(comm_socket, message, 1024, 0);
+                char *token = strtok(message, "#");
+                if (strcmp(token, "NAME") == 0) {
+                    token = strtok(NULL, "#");
+                    find_login(token, &recv_messager, 4);
+                } else if (strcmp(token, "FILEDIR") == 0) {
+                    token = strtok(NULL, "#");
+                    find_login(token, &recv_messager, 5);
+                } else if (strcmp(token, "LIST") == 0) {
+                    token = strtok(NULL, "#");
+                    send_list(token, comm_socket, &recv_messager);
+                }
+                send(comm_socket, recv_messager, 1024, 0);
+                free(message);
+                free(recv_messager);
+                exit(0);
             }
-            else if(strcmp(token,"FILEDIR") == 0){
-                token = strtok(NULL, "#");
-                find_login(token, &recv_messager,5);
-            }
-            else if(strcmp(token,"LIST") == 0){
-                token = strtok(NULL, "#");
-                send_list(token,comm_socket,&recv_messager);
-            }
-            send(comm_socket, recv_messager, 1024, 0);
-            free(message);
-            free(recv_messager);
         }
     }
 }
