@@ -132,7 +132,6 @@ void send_list(char *seed,int socket,char **end) {
  * @brief odchytávač SIGINT
  */
 void sighandler(){
-    close(comm_socket);
     exit(0);
 }
 
@@ -178,7 +177,6 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
     //##konec prevzateho kodu##
-
     //nyní budueme příjmat zpávy od klientů
     addr_size = sizeof their_addr;
     pid_t pid;
@@ -210,6 +208,7 @@ int main(int argc, char* argv[]) {
                 send(comm_socket, recv_messager, 1024, 0);
                 free(message);
                 free(recv_messager);
+                close(comm_socket);
                 exit(0);
             }
         }
