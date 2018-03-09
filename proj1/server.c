@@ -1,8 +1,10 @@
 /**
  * IPK projekt 1, Varianta 1: Klient-server pro získání informace o uživatelích (Server)
  * Jan Vávra, xvavra20
- * kody pro zahajeni komunikace (jsou vyznačeny) jsou převzaty z http://beej.us/guide/bgnet/html/multi/index.html
- * přezvaté kody spadají pod "public domain" http://beej.us/guide/bgnet/html/multi/intro.html#copyright
+ * Kody pro zahajeni komunikace (jsou vyznačeny) jsou převzaty z http://beej.us/guide/bgnet/html/multi/index.html
+ * Přezvaté kody spadají pod "public domain"
+ * - "The C source code presented in this document is hereby granted to the public domain, and is completely free of any license restriction."
+ * - http://beej.us/guide/bgnet/html/multi/intro.html#copyright
  */
 
 
@@ -12,11 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <netdb.h>
-#include <netinet/in.h>
 #include <ctype.h>
-#include <bits/signum.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 //soket, na kterém komunikuje klient se serverem
 int comm_socket;
@@ -141,13 +142,18 @@ int main(int argc, char* argv[]) {
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
     }
-
-    //##prevzaty kod##
+    signal(SIGINT, sighandler);
+    /**
+     * #################################################
+     * Převzatý kod - Autor: Brian "Beej Jorgensen" Hall
+     * Licence - public domain
+     * URL - http://beej.us/guide/bgnet/html/multi/acceptman.html
+     * #################################################
+     */
     struct sockaddr_storage their_addr;
     socklen_t addr_size;
     struct addrinfo hints, *res;
     int sockfd;
-    signal(SIGINT, sighandler);
 
     //pripravíme se strukturu pro info o serveru
     memset(&hints, 0, sizeof(hints));
@@ -171,17 +177,44 @@ int main(int argc, char* argv[]) {
         perror("ERROR: bind");
         exit(EXIT_FAILURE);
     }
+    freeaddrinfo(res);
 
     if((listen(sockfd, 5)) < 0){
         perror("ERROR: listen");
         exit(EXIT_FAILURE);
     }
-    //##konec prevzateho kodu##
+
     //nyní budueme příjmat zpávy od klientů
     addr_size = sizeof their_addr;
+    /**
+     * #################################################
+     * Konec převzatého kodu
+     * #################################################
+     */
     pid_t pid;
+    //nastavení timeoutu
+    struct timeval timeout;
+    timeout.tv_sec = 4;
+    timeout.tv_usec = 0;
     while(1) {
+        /**
+         * #################################################
+         * Převzatý kod - Autor: Brian "Beej Jorgensen" Hall
+         * Licence - public domain
+         * URL - http://beej.us/guide/bgnet/html/multi/acceptman.html
+         * #################################################
+         */
         comm_socket = accept(sockfd, (struct sockaddr *) &their_addr, &addr_size);
+        if (setsockopt (comm_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0 ||
+                setsockopt (comm_socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0) {
+            perror("Error: setsockopt\n");
+            exit(1);
+        }
+        /**
+         * #################################################
+         * Konec převzatého kodu
+         * #################################################
+         */
         pid = fork();
         // ready to communicate on socket descriptor new_fd!
         if (comm_socket > 0) {

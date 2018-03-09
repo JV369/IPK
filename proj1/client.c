@@ -12,7 +12,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <arpa/inet.h>
+#include <sys/time.h>
 
 /**
  * @brief funkce pro zpracování argumentů
@@ -79,7 +79,13 @@ int main(int argc, char* argv[]) {
         perror("ERROR: arguments");
         exit(EXIT_FAILURE);
     }
-    //##prevzaty kod##
+    /**
+     * #################################################
+     * Převzatý kod - Autor: Brian "Beej Jorgensen" Hall
+     * Licence - public domain
+     * URL -http://beej.us/guide/bgnet/html/multi/getaddrinfoman.html
+     * #################################################
+     */
     struct addrinfo hints, *servinfo;
     int rv;
 
@@ -100,8 +106,22 @@ int main(int argc, char* argv[]) {
         perror("ERROR: connect");
         exit(EXIT_FAILURE);
     }
-    //##konec prevzateho kodu##
+    freeaddrinfo(servinfo);
+    /**
+     * #################################################
+     * Konec převzatého kodu
+     * #################################################
+     */
+    //nastavení timeoutu
+    struct timeval timeout;
+    timeout.tv_sec = 4;
+    timeout.tv_usec = 0;
 
+    if (setsockopt (client_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0 ||
+            setsockopt (client_socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout))< 0) {
+        perror("Error: setsockopt\n");
+        exit(1);
+    }
     //test na připojení se ke správnému portu na serveru
     char test_mess[1024] = "Are you there?";
     if((send(client_socket,test_mess,1024,0)) < 0){
@@ -143,8 +163,7 @@ int main(int argc, char* argv[]) {
 
     //pokud narazí na zprávu NOT_FOUND nebyl nalezen login resp seed
     if(strcmp(token,"NOT_FOUND") == 0){
-        token = strtok(NULL,"#");
-        fprintf(stderr,"No login %s found\n",token);
+        fprintf(stderr,"Request was not found\n");
         exit(EXIT_FAILURE);
     }
     token = strtok(NULL,"#");
