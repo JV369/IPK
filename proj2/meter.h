@@ -15,5 +15,6 @@
 #include <ctype.h>
 #include "queue.h"
 #include <math.h>
+#include <limits.h>
 
 int meter(char *hostname,char *port,long probeSize,long time);

@@ -228,8 +228,8 @@ int meter(char *hostname,char *port,long probeSize,long time){
     free(message);
     free(message_recv);
     printf("Caculating stats ... \n");
-    float minSpeed = INT16_MAX;
-    float maxSpeed = INT64_MIN;
+    float minSpeed = INT_MAX;
+    float maxSpeed = INT_MIN;
     float avrgSpeed = 0;
     float avrgRtt = 0;
     int numOfPackets = 0;
