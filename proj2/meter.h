@@ -16,5 +16,6 @@
 #include "queue.h"
 #include <math.h>
 #include <limits.h>
+#include <sys/mman.h>
 
 int meter(char *hostname,char *port,long probeSize,long time);
