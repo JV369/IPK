@@ -42,7 +42,7 @@ void reflect(char *port){
         perror("ERROR: bind");
         exit(EXIT_FAILURE);
     }
-    message = (char *) malloc(65510 * sizeof(char));
+    message = (char *) malloc(65507 * sizeof(char));
     while(1) {
         if (recvfrom(sockfd, message, 65507, 0, res->ai_addr, &res->ai_addrlen) < 0) {
             perror("ERROR: recvfrom");
