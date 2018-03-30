@@ -11,11 +11,11 @@ void QueueInit(TQueue *queue){
 }
 
 void QueueUp(TQueue *queue, long sec, long usec,char *message){
-    TQElem newElem = malloc(sizeof(newElem));
+    TQElem newElem = (TQElem)malloc(sizeof(struct QElem));
 
     newElem->sec = sec;
     newElem->usec = usec;
-    newElem->message = (char *)malloc(strlen(message) * sizeof(char));
+    newElem->message = (char *)malloc(strlen(message)+1);
     strcpy(newElem->message,message);
     newElem->next = NULL;
     if(queue->front != NULL){
@@ -39,7 +39,7 @@ void QueueFrontPop(TQueue *queue, long *sec, long *usec, char **message){
 
     *sec = temp->sec;
     *usec = temp->usec;
-    *message = (char *)malloc(strlen(temp->message));
+    *message =
     strcpy(*message,temp->message);
 
     free(temp->message);
