@@ -85,7 +85,7 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
             exit(0);
         }
         testValue++;
-        printf("%d %d \n",accept,(*iterSendUDP));
+        printf("Send/recieved packets: %d/%d \n",accept,(*iterSendUDP));
         if(accept < (*iterSendUDP)){
             testValue = 0;
             if(sleep.tv_nsec == 0)
@@ -185,7 +185,6 @@ int meter(char *hostname,char *port,long probeSize,long time){
     struct timespec sleep;
     printf("Testing the connection ... \n");
     sleep = getSleepTime(client_socket,servinfo,probeSize);
-    printf("%ld %ld\n",sleep.tv_sec,sleep.tv_nsec);
     struct timeval systime,inTime, outTime;
     TQueue queue;
     QueueInit(&queue);
@@ -239,7 +238,8 @@ int meter(char *hostname,char *port,long probeSize,long time){
     float maxSpeed = INT_MIN;
     float avrgSpeed = 0;
     float avrgRtt = 0;
-
+    TQueueMeasure measureResults;
+    QueueInitMeasure(&measureResults);
     char *string = (char *)malloc(probeSize);
     while(queue.front != NULL){
         long secSend;
@@ -257,8 +257,8 @@ int meter(char *hostname,char *port,long probeSize,long time){
         token = strtok(NULL,"#");
         usecSend = strtol(token,NULL,10);
         float rtt = (secRc + usecRc/1000000.0f)-(secSend+usecSend/1000000.0f);
-        float speed = probeSize/rtt;
-        speed = speed *8;
+        float speed = (probeSize*8)/rtt;
+        QueueUpMeasure(&measureResults,speed);
         if(speed > maxSpeed){
             maxSpeed = speed;
         }
@@ -270,15 +270,26 @@ int meter(char *hostname,char *port,long probeSize,long time){
     }
     avrgSpeed = avrgSpeed/(*numOfPackets);
     avrgRtt = avrgRtt/time;
-    printf("--------------------------------------\n");
-    printf("Average speed\t");
+
+    float stdevSpeed = 0;
+    while (measureResults.front != NULL){
+        float speed;
+        QueueFrontPopMeasure(&measureResults,&speed);
+        stdevSpeed += powf(speed-avrgSpeed,2);
+    }
+    stdevSpeed = sqrtf(stdevSpeed/(float)(*numOfPackets));
+
+    printf("--------------------------------------------\n");
+    printf("Average speed:\t\t\t");
     printActualSpeed(avrgSpeed);
-    printf("Maximum speed\t");
+    printf("Maximum speed:\t\t\t");
     printActualSpeed(maxSpeed);
-    printf("Minimum speed\t");
+    printf("Minimum speed:\t\t\t");
     printActualSpeed(minSpeed);
-    printf("Average RTT\t %.2f s\n",avrgRtt);
-    printf("--------------------------------------\n");
+    printf("Standart deviation of speed:\t");
+    printActualSpeed(stdevSpeed);
+    printf("Average RTT:\t\t\t%.2f s\n",avrgRtt);
+    printf("--------------------------------------------\n");
     free(string);
     munmap(numOfPackets,sizeof(int));
     QueueDestroy(&queue);

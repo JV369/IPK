@@ -29,7 +29,7 @@
       <file leaf-file-name="client.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../proj1/client.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
+            <state relative-caret-position="1962">
               <caret line="109" column="7" lean-forward="false" selection-start-line="109" selection-start-column="7" selection-end-line="109" selection-end-column="7" />
               <folding>
                 <element signature="e#339#357#0" expanded="true" />
@@ -41,8 +41,8 @@
       <file leaf-file-name="meter.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/meter.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-355">
-              <caret line="71" column="105" lean-forward="false" selection-start-line="71" selection-start-column="105" selection-end-line="71" selection-end-column="105" />
+            <state relative-caret-position="569">
+              <caret line="259" column="35" lean-forward="false" selection-start-line="259" selection-start-column="35" selection-end-line="259" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -51,7 +51,7 @@
       <file leaf-file-name="proj2.c" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/IOS_projects/IOS_proj2/proj2.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1600">
+            <state relative-caret-position="876">
               <caret line="304" column="43" lean-forward="false" selection-start-line="304" selection-start-column="12" selection-end-line="304" selection-end-column="43" />
               <folding />
             </state>
@@ -61,8 +61,8 @@
       <file leaf-file-name="queue.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/queue.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="17" column="55" lean-forward="false" selection-start-line="17" selection-start-column="55" selection-end-line="17" selection-end-column="55" />
+            <state relative-caret-position="282">
+              <caret line="66" column="41" lean-forward="false" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -71,8 +71,8 @@
       <file leaf-file-name="queue.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/queue.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+            <state relative-caret-position="738">
+              <caret line="41" column="42" lean-forward="false" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
               <folding>
                 <element signature="e#37#55#0" expanded="true" />
               </folding>
@@ -93,7 +93,7 @@
       <file leaf-file-name="reflect.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/reflect.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
+            <state relative-caret-position="792">
               <caret line="44" column="35" lean-forward="false" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
               <folding />
             </state>
@@ -147,10 +147,10 @@
       <list>
         <option value="$PROJECT_DIR$/reflect.h" />
         <option value="$PROJECT_DIR$/ipk-mtrip.c" />
-        <option value="$PROJECT_DIR$/queue.h" />
-        <option value="$PROJECT_DIR$/queue.c" />
         <option value="$PROJECT_DIR$/reflect.c" />
         <option value="$PROJECT_DIR$/meter.h" />
+        <option value="$PROJECT_DIR$/queue.c" />
+        <option value="$PROJECT_DIR$/queue.h" />
         <option value="$PROJECT_DIR$/meter.c" />
       </list>
     </option>
@@ -400,12 +400,14 @@
       <workItem from="1522254975664" duration="10333000" />
       <workItem from="1522340695524" duration="13766000" />
       <workItem from="1522398135124" duration="2073000" />
-      <workItem from="1522403998930" duration="23592000" />
+      <workItem from="1522403998930" duration="24523000" />
+      <workItem from="1522487980069" duration="965000" />
+      <workItem from="1522494872583" duration="4416000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49764000" />
+    <option name="totallyTimeSpent" value="56076000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -442,6 +444,122 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/reflect.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/meter.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+          <folding>
+            <element signature="e#37#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ipk-mtrip.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="954">
+          <caret line="53" column="12" lean-forward="false" selection-start-line="53" selection-start-column="12" selection-end-line="53" selection-end-column="64" />
+          <folding>
+            <element signature="e#36#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../proj1/client.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1962">
+          <caret line="109" column="7" lean-forward="false" selection-start-line="109" selection-start-column="7" selection-end-line="109" selection-end-column="7" />
+          <folding>
+            <element signature="e#339#357#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/meter.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3492">
+          <caret line="194" column="95" lean-forward="true" selection-start-line="194" selection-start-column="80" selection-end-line="194" selection-end-column="95" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/IOS_projects/IOS_proj2/proj2.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5472">
+          <caret line="304" column="43" lean-forward="false" selection-start-line="304" selection-start-column="12" selection-end-line="304" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/queue.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="55" lean-forward="false" selection-start-line="17" selection-start-column="55" selection-end-line="17" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/queue.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding>
+            <element signature="e#37#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../proj1/server.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4158">
+          <caret line="231" column="52" lean-forward="false" selection-start-line="231" selection-start-column="52" selection-end-line="231" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reflect.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="792">
+          <caret line="44" column="35" lean-forward="false" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reflect.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/meter.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+          <folding>
+            <element signature="e#37#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ipk-mtrip.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="954">
+          <caret line="53" column="12" lean-forward="false" selection-start-line="53" selection-start-column="12" selection-end-line="53" selection-end-column="64" />
+          <folding>
+            <element signature="e#36#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -705,17 +823,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/queue.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="17" column="55" lean-forward="false" selection-start-line="17" selection-start-column="55" selection-end-line="17" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/reflect.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
+        <state relative-caret-position="792">
           <caret line="44" column="35" lean-forward="false" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
           <folding />
         </state>
@@ -723,20 +833,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../proj1/client.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
+        <state relative-caret-position="1962">
           <caret line="109" column="7" lean-forward="false" selection-start-line="109" selection-start-column="7" selection-end-line="109" selection-end-column="7" />
           <folding>
             <element signature="e#339#357#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/queue.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding>
-            <element signature="e#37#55#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -751,9 +851,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/queue.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="738">
+          <caret line="41" column="42" lean-forward="false" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
+          <folding>
+            <element signature="e#37#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/queue.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="66" column="41" lean-forward="false" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/IOS_projects/IOS_proj2/proj2.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1600">
+        <state relative-caret-position="876">
           <caret line="304" column="43" lean-forward="false" selection-start-line="304" selection-start-column="12" selection-end-line="304" selection-end-column="43" />
           <folding />
         </state>
@@ -761,8 +879,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/meter.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-355">
-          <caret line="71" column="105" lean-forward="false" selection-start-line="71" selection-start-column="105" selection-end-line="71" selection-end-column="105" />
+        <state relative-caret-position="569">
+          <caret line="259" column="35" lean-forward="false" selection-start-line="259" selection-start-column="35" selection-end-line="259" selection-end-column="35" />
           <folding />
         </state>
       </provider>
