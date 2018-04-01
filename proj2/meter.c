@@ -5,6 +5,13 @@
 #define _DEFAULT_SOURCE
 #include "meter.h"
 
+/**
+ * @brief odchytávač SIGINT
+ */
+void sighandlerMeter(){
+    exit(0);
+}
+
 void fillString(char **strng,long to){
     char *temp = (char *)malloc((to) * sizeof(char));
     bzero(temp,to);
@@ -29,12 +36,12 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
     int testValue = 0;
     //hodnoty pro stanoveni kvality posilani/obdrzeni paketu
     int treshold = 3;
-
+    int waitTime = 0;
     int *iterSendUDP = mmap(0, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     *iterSendUDP = 0;
     struct timespec sleep;
     struct timeval timeout;
-    timeout.tv_sec = 5;
+    timeout.tv_sec = 3;
     timeout.tv_usec = 0;
     char *message = (char *)malloc((probeSize) * sizeof(char));
     char *message_recv = (char *)malloc((probeSize) * sizeof(char));
@@ -54,9 +61,23 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
 
     pid_t pid;
     while (testValue < treshold) {
+        switch(testValue){
+            case 0:
+                waitTime = 2;
+                break;
+            case 1:
+                waitTime = 5;
+                break;
+            case 2:
+                waitTime = 10;
+        }
+        printf("Testing connection for %d seconds\n",waitTime);
         pid = fork();
         gettimeofday(&systime,NULL);
-        for (struct timeval actTime = systime; actTime.tv_sec < systime.tv_sec + 4; gettimeofday(&actTime,NULL)) {
+        if (pid > 0){
+            waitTime++;
+        }
+        for (struct timeval actTime = systime; actTime.tv_sec < systime.tv_sec + waitTime; gettimeofday(&actTime,NULL)) {
             if(pid == 0) {
                 gettimeofday(&inTime,NULL);
                 bzero(message,probeSize);
@@ -128,6 +149,7 @@ void printActualSpeed(float speed){
 int meter(char *hostname,char *port,long probeSize,long time){
     int client_socket;
     struct addrinfo hints, *servinfo;
+    signal(SIGINT, sighandlerMeter);
     char *message = (char *)malloc(1024 * sizeof(char));
     char *message_recv = (char *)malloc(1024 * sizeof(char));
 
@@ -155,7 +177,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
     bzero(message_recv,1024);
     strcpy(message,"CONNECT");
     struct timeval timeout;
-    timeout.tv_sec = 5;
+    timeout.tv_sec = 3;
     timeout.tv_usec = 0;
     if (setsockopt (client_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0 ||
         setsockopt (client_socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0) {
@@ -197,6 +219,9 @@ int meter(char *hostname,char *port,long probeSize,long time){
     printf("Sending probes ... \n");
     pid_t pid;
     pid = fork();
+    if(pid > 0){
+        time++;
+    }
     gettimeofday(&systime,NULL);
 
     for (struct timeval actTime = systime; actTime.tv_sec < systime.tv_sec + time; gettimeofday(&actTime,NULL)) {
@@ -231,6 +256,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
         free(servinfo);
         exit(0);
     }
+    time--;
     free(message);
     free(message_recv);
     printf("Caculating stats ... \n");

@@ -17,5 +17,6 @@
 #include <math.h>
 #include <limits.h>
 #include <sys/mman.h>
+#include <signal.h>
 
 int meter(char *hostname,char *port,long probeSize,long time);
