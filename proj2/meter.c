@@ -63,19 +63,19 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
     while (testValue < treshold) {
         switch(testValue){
             case 0:
-                waitTime = 2;
+                waitTime = 3;
                 break;
             case 1:
-                waitTime = 5;
+                waitTime = 6;
                 break;
             case 2:
-                waitTime = 10;
+                waitTime = 11;
         }
-        printf("Testing connection for %d seconds\n",waitTime);
+        printf("Testing connection for %d seconds\n",waitTime-1);
         pid = fork();
         gettimeofday(&systime,NULL);
-        if (pid > 0){
-            waitTime++;
+        if (pid == 0){
+            waitTime--;
         }
         for (struct timeval actTime = systime; actTime.tv_sec < systime.tv_sec + waitTime; gettimeofday(&actTime,NULL)) {
             if(pid == 0) {
@@ -215,12 +215,12 @@ int meter(char *hostname,char *port,long probeSize,long time){
 
     int *numOfPackets = mmap(0, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     int accept = 0;
-
+    time++;
     printf("Sending probes ... \n");
     pid_t pid;
     pid = fork();
-    if(pid > 0){
-        time++;
+    if(pid == 0){
+        time--;
     }
     gettimeofday(&systime,NULL);
 
@@ -275,7 +275,6 @@ int meter(char *hostname,char *port,long probeSize,long time){
         bzero(string,probeSize);
         QueueFrontPop(&queue,&secRc,&usecRc,&string);
         if(strcmp(string,"none") == 0){
-            printf("Oopsie\n");
             continue;
         }
         char *token = strtok(string,"#");
@@ -323,20 +322,3 @@ int meter(char *hostname,char *port,long probeSize,long time){
     return 0;
 }
 
-
-//jak na frontu
-/*
-    TQueue queue;
-    QueueInit(&queue);
-    QueueUp(&queue,54,56,"hue");
-    QueueUp(&queue,42,42,"hello");
-    long test1;
-    long test2;
-    char *hue = (char *)malloc(1024);
-    QueueFrontPop(&queue,&test1,&test2,&hue);
-    printf("%ld %ld %s\n",test1,test2,hue);
-    QueueFrontPop(&queue,&test1,&test2,&hue);
-    printf("%ld %ld %s\n",test1,test2,hue);
-    QueueDestroy(&queue);
-    free(hue);
-     */
