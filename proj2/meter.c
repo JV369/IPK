@@ -294,7 +294,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
         avrgRtt += rtt;
     }
     avrgSpeed = avrgSpeed/(*numOfPackets);
-    avrgRtt = avrgRtt/time;
+    avrgRtt = (avrgRtt*1000)/(*numOfPackets);
 
     float stdevSpeed = 0;
     while (measureResults.front != NULL){
@@ -313,7 +313,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
     printActualSpeed(minSpeed);
     printf("Standart deviation of speed:\t");
     printActualSpeed(stdevSpeed);
-    printf("Average RTT:\t\t\t%.2f s\n",avrgRtt);
+    printf("Average RTT:\t\t\t%.2f ms\n",avrgRtt);
     printf("--------------------------------------------\n");
     free(string);
     munmap(numOfPackets,sizeof(int));
