@@ -282,7 +282,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
         token = strtok(NULL,"#");
         usecSend = strtol(token,NULL,10);
         float rtt = (secRc + usecRc/1000000.0f)-(secSend+usecSend/1000000.0f);
-        float speed = (probeSize*8)/rtt;
+        float speed = (probeSize*8)/(rtt/2);
         QueueUpMeasure(&measureResults,speed);
         if(speed > maxSpeed){
             maxSpeed = speed;

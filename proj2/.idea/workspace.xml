@@ -41,8 +41,8 @@
       <file leaf-file-name="meter.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/meter.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="642">
-              <caret line="315" column="36" lean-forward="false" selection-start-line="315" selection-start-column="36" selection-end-line="315" selection-end-column="36" />
+            <state relative-caret-position="480">
+              <caret line="284" column="43" lean-forward="false" selection-start-line="284" selection-start-column="43" selection-end-line="284" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -51,7 +51,7 @@
       <file leaf-file-name="proj2.c" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/IOS_projects/IOS_proj2/proj2.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="876">
+            <state relative-caret-position="5472">
               <caret line="304" column="43" lean-forward="false" selection-start-line="304" selection-start-column="12" selection-end-line="304" selection-end-column="43" />
               <folding />
             </state>
@@ -61,7 +61,7 @@
       <file leaf-file-name="queue.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/queue.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="864">
+            <state relative-caret-position="1188">
               <caret line="66" column="41" lean-forward="false" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
               <folding />
             </state>
@@ -404,12 +404,13 @@
       <workItem from="1522487980069" duration="965000" />
       <workItem from="1522494872583" duration="4805000" />
       <workItem from="1522600839945" duration="3829000" />
-      <workItem from="1522695290598" duration="3546000" />
+      <workItem from="1522695290598" duration="3615000" />
+      <workItem from="1522782206762" duration="610000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63840000" />
+    <option name="totallyTimeSpent" value="64519000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -855,7 +856,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/queue.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="864">
+        <state relative-caret-position="1188">
           <caret line="66" column="41" lean-forward="false" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
           <folding />
         </state>
@@ -873,7 +874,7 @@
     </entry>
     <entry file="file://$USER_HOME$/IOS_projects/IOS_proj2/proj2.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="876">
+        <state relative-caret-position="5472">
           <caret line="304" column="43" lean-forward="false" selection-start-line="304" selection-start-column="12" selection-end-line="304" selection-end-column="43" />
           <folding />
         </state>
@@ -881,8 +882,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/meter.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="642">
-          <caret line="315" column="36" lean-forward="false" selection-start-line="315" selection-start-column="36" selection-end-line="315" selection-end-column="36" />
+        <state relative-caret-position="480">
+          <caret line="284" column="43" lean-forward="false" selection-start-line="284" selection-start-column="43" selection-end-line="284" selection-end-column="43" />
           <folding />
         </state>
       </provider>
