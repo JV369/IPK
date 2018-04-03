@@ -41,8 +41,8 @@
       <file leaf-file-name="meter.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/meter.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="284" column="43" lean-forward="false" selection-start-line="284" selection-start-column="43" selection-end-line="284" selection-end-column="43" />
+            <state relative-caret-position="628">
+              <caret line="304" column="6" lean-forward="false" selection-start-line="304" selection-start-column="6" selection-end-line="304" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -140,6 +140,7 @@
     <findStrings>
       <find>sighan</find>
       <find>accept</find>
+      <find>time</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -405,12 +406,12 @@
       <workItem from="1522494872583" duration="4805000" />
       <workItem from="1522600839945" duration="3829000" />
       <workItem from="1522695290598" duration="3615000" />
-      <workItem from="1522782206762" duration="610000" />
+      <workItem from="1522782206762" duration="10415000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64519000" />
+    <option name="totallyTimeSpent" value="74324000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -882,8 +883,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/meter.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="284" column="43" lean-forward="false" selection-start-line="284" selection-start-column="43" selection-end-line="284" selection-end-column="43" />
+        <state relative-caret-position="628">
+          <caret line="304" column="6" lean-forward="false" selection-start-line="304" selection-start-column="6" selection-end-line="304" selection-end-column="6" />
           <folding />
         </state>
       </provider>

@@ -41,7 +41,7 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
     *iterSendUDP = 0;
     struct timespec sleep;
     struct timeval timeout;
-    timeout.tv_sec = 3;
+    timeout.tv_sec = 1;
     timeout.tv_usec = 0;
     char *message = (char *)malloc((probeSize) * sizeof(char));
     char *message_recv = (char *)malloc((probeSize) * sizeof(char));
@@ -61,16 +61,7 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
 
     pid_t pid;
     while (testValue < treshold) {
-        switch(testValue){
-            case 0:
-                waitTime = 3;
-                break;
-            case 1:
-                waitTime = 6;
-                break;
-            case 2:
-                waitTime = 11;
-        }
+        waitTime = 3;
         printf("Testing connection for %d seconds\n",waitTime-1);
         pid = fork();
         gettimeofday(&systime,NULL);
@@ -107,11 +98,11 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
         }
         testValue++;
         printf("Send/recieved packets: %d/%d \n",accept,(*iterSendUDP));
-        if(accept < (*iterSendUDP)){
+        if(((*iterSendUDP) - accept) > 10){
             testValue = 0;
             if(sleep.tv_nsec == 0)
                 sleep.tv_nsec += 500;
-            sleep.tv_nsec *= 4;
+            sleep.tv_nsec *= 2;
             if (sleep.tv_nsec / 1000000000 > 1){
                 sleep.tv_sec += 1;
                 sleep.tv_nsec = 0;
@@ -177,7 +168,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
     bzero(message_recv,1024);
     strcpy(message,"CONNECT");
     struct timeval timeout;
-    timeout.tv_sec = 3;
+    timeout.tv_sec = 2;
     timeout.tv_usec = 0;
     if (setsockopt (client_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0 ||
         setsockopt (client_socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0) {
@@ -213,59 +204,85 @@ int meter(char *hostname,char *port,long probeSize,long time){
     message = (char *)malloc(probeSize * sizeof(char));
     message_recv = (char *)malloc(probeSize * sizeof(char));
 
-    int *numOfPackets = mmap(0, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    int accept = 0;
-    time++;
-    printf("Sending probes ... \n");
-    pid_t pid;
-    pid = fork();
-    if(pid == 0){
-        time--;
-    }
-    gettimeofday(&systime,NULL);
-
-    for (struct timeval actTime = systime; actTime.tv_sec < systime.tv_sec + time; gettimeofday(&actTime,NULL)) {
-        if(pid == 0) {
-            bzero(message,(size_t)probeSize);
-            gettimeofday(&inTime,NULL);
-            sprintf(message,"%ld#%ld#",inTime.tv_sec-systime.tv_sec,inTime.tv_usec);
-            fillString(&message,probeSize);
-            if(sendto(client_socket,message,probeSize,0,servinfo->ai_addr,servinfo->ai_addrlen)< 0){
-                perror("ERROR: sendto");
-                return 1;
-            }
-            (*numOfPackets)++;
-            nanosleep(&sleep,NULL);
-        }
-        else if(pid > 0) {
-            bzero(message_recv, (size_t) probeSize);
-            int rf = recvfrom(client_socket, message_recv, probeSize, 0, servinfo->ai_addr, &servinfo->ai_addrlen);
-            gettimeofday(&outTime, NULL);
-            if (rf < 0) {
-                if(accept < (*numOfPackets))
-                    QueueUp(&queue, outTime.tv_sec - systime.tv_sec, outTime.tv_usec, "none");
-            } else {
-                accept++;
-                QueueUp(&queue, outTime.tv_sec - systime.tv_sec, outTime.tv_usec, message_recv);
-            }
-        }
-    }
-    if(pid == 0){
-        free(message);
-        free(message_recv);
-        free(servinfo);
-        exit(0);
-    }
-    time--;
-    free(message);
-    free(message_recv);
-    printf("Caculating stats ... \n");
     float minSpeed = INT_MAX;
     float maxSpeed = INT_MIN;
     float avrgSpeed = 0;
-    float avrgRtt = 0;
     TQueueMeasure measureResults;
     QueueInitMeasure(&measureResults);
+    int recievedPackets = 0;
+    int iteration = 0;
+    int *numOfPackets = mmap(0, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    float iterTime = time/5.0f;
+    iterTime++;
+    printf("Sending probes ... \n");
+    while(iteration < 5) {
+        int accept = 0;
+        pid_t pid;
+        pid = fork();
+        if(pid == 0){
+            iterTime--;
+        }
+        gettimeofday(&systime,NULL);
+        for (struct timeval actTime = systime; (actTime.tv_sec*1000000.0 + actTime.tv_usec) < ((systime.tv_sec*1000000.0 + systime.tv_usec) + iterTime*1000000.0); gettimeofday(&actTime, NULL)) {
+            if (pid == 0) {
+                bzero(message, (size_t) probeSize);
+                gettimeofday(&inTime, NULL);
+                sprintf(message, "%ld#%ld#", inTime.tv_sec - systime.tv_sec, inTime.tv_usec);
+                fillString(&message, probeSize);
+                if (sendto(client_socket, message, probeSize, 0, servinfo->ai_addr, servinfo->ai_addrlen) < 0) {
+                    perror("ERROR: sendto");
+                    return 1;
+                }
+                (*numOfPackets)++;
+                nanosleep(&sleep, NULL);
+            } else if (pid > 0) {
+                bzero(message_recv, (size_t) probeSize);
+                int rf = recvfrom(client_socket, message_recv, probeSize, 0, servinfo->ai_addr, &servinfo->ai_addrlen);
+                gettimeofday(&outTime, NULL);
+                if (rf < 0) {
+                    if (accept < (*numOfPackets))
+                        QueueUp(&queue, outTime.tv_sec - systime.tv_sec, outTime.tv_usec, "none");
+                } else {
+                    accept++;
+                    QueueUp(&queue, outTime.tv_sec - systime.tv_sec, outTime.tv_usec, message_recv);
+                }
+            }
+        }
+        if (pid == 0) {
+            QueueDestroy(&queue);
+            QueueDestroyMeasure(&measureResults);
+            free(message);
+            free(message_recv);
+            free(servinfo);
+            exit(0);
+        }
+        else if (pid > 0){
+            iteration++;
+            if(accept < (*numOfPackets)){
+                sleep.tv_nsec += sleep.tv_nsec*0.1;
+            }
+            else{
+                sleep.tv_nsec -= sleep.tv_nsec*0.05;
+            }
+            (*numOfPackets) = 0;
+            float speed = ((accept*probeSize*8.0f)/(iterTime-1.0f))*2.0f;
+            avrgSpeed += speed;
+            if(speed < minSpeed){
+                minSpeed = speed;
+            }
+            if(speed> maxSpeed){
+                maxSpeed = speed;
+            }
+            recievedPackets += accept;
+            QueueUpMeasure(&measureResults,speed);
+        }
+    }
+    avrgSpeed = avrgSpeed/5;
+    free(message);
+    free(message_recv);
+    printf("Caculating stats ... \n");
+    float avrgRtt = 0;
+
     char *string = (char *)malloc(probeSize);
     while(queue.front != NULL){
         long secSend;
@@ -274,7 +291,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
         long usecRc;
         bzero(string,probeSize);
         QueueFrontPop(&queue,&secRc,&usecRc,&string);
-        if(strcmp(string,"none") == 0){
+        if(strcmp(string,"none")== 0){
             continue;
         }
         char *token = strtok(string,"#");
@@ -282,27 +299,17 @@ int meter(char *hostname,char *port,long probeSize,long time){
         token = strtok(NULL,"#");
         usecSend = strtol(token,NULL,10);
         float rtt = (secRc + usecRc/1000000.0f)-(secSend+usecSend/1000000.0f);
-        float speed = (probeSize*8)/(rtt/2);
-        QueueUpMeasure(&measureResults,speed);
-        if(speed > maxSpeed){
-            maxSpeed = speed;
-        }
-        if(speed < minSpeed){
-            minSpeed = speed;
-        }
-        avrgSpeed += speed;
         avrgRtt += rtt;
     }
-    avrgSpeed = avrgSpeed/(*numOfPackets);
-    avrgRtt = (avrgRtt*1000)/(*numOfPackets);
-
+    avrgRtt = (avrgRtt*1000.0f)/recievedPackets;
+    //printf("recieved ... %d\n",recievedPackets);
     float stdevSpeed = 0;
     while (measureResults.front != NULL){
         float speed;
         QueueFrontPopMeasure(&measureResults,&speed);
         stdevSpeed += powf(speed-avrgSpeed,2);
     }
-    stdevSpeed = sqrtf(stdevSpeed/(float)(*numOfPackets));
+    stdevSpeed = sqrtf(stdevSpeed/5.0f);
 
     printf("--------------------------------------------\n");
     printf("Average speed:\t\t\t");
