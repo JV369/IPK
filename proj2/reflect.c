@@ -42,16 +42,33 @@ void reflect(char *port){
         perror("ERROR: bind");
         exit(EXIT_FAILURE);
     }
-    message = (char *) malloc(65507 * sizeof(char));
+    message = (char *) malloc(1024);
+    long alloc;
     while(1) {
-        if (recvfrom(sockfd, message, 65507, 0, res->ai_addr, &res->ai_addrlen) < 0) {
+        if (recvfrom(sockfd, message, 1024, 0, res->ai_addr, &res->ai_addrlen) < 0) {
             perror("ERROR: recvfrom");
             break;
         }
-        if (sendto(sockfd, message, 65507, 0, res->ai_addr, res->ai_addrlen) < 0) {
-            perror("ERROR: sendto");
+        char *token = strtok(message,"#");
+        if(strcmp(token,"CONNECT") != 0){
+            fprintf(stderr,"Control message has wrong format\n");
             break;
         }
+        token = strtok(NULL,"#");
+        alloc = strtol(token,NULL,10);
+        message = (char *)realloc(message,alloc);
+        while(strcmp(message,"END") != 0){
+            if (sendto(sockfd, message, alloc, 0, res->ai_addr, res->ai_addrlen) < 0) {
+                perror("ERROR: sendto");
+                break;
+            }
+            bzero(message, (size_t) alloc);
+            if (recvfrom(sockfd, message, alloc, 0, res->ai_addr, &res->ai_addrlen) < 0) {
+                perror("ERROR: recvfrom");
+                break;
+            }
+        }
+        message = (char *)realloc(message,1024);
     }
     free(message);
     freeaddrinfo(res);

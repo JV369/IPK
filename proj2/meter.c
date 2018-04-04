@@ -55,9 +55,7 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
         perror("Error: setsockopt\n");
         exit(1);
     }
-    TQueue queue;
-    QueueInit(&queue);
-    struct timeval systime,inTime, outTime;
+    struct timeval systime;
 
     pid_t pid;
     while (testValue < treshold) {
@@ -70,7 +68,6 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
         }
         for (struct timeval actTime = systime; actTime.tv_sec < systime.tv_sec + waitTime; gettimeofday(&actTime,NULL)) {
             if(pid == 0) {
-                gettimeofday(&inTime,NULL);
                 bzero(message,probeSize);
                 fillString(&message,probeSize);
                 if(sendto(client_socket,message,probeSize,0,servinfo->ai_addr,servinfo->ai_addrlen)< 0){
@@ -82,9 +79,6 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
             else if(pid > 0){
                 bzero(message_recv,(size_t)probeSize);
                 recvfrom(client_socket,message_recv,probeSize,0,servinfo->ai_addr,&servinfo->ai_addrlen);
-                gettimeofday(&outTime,NULL);
-                QueueUp(&queue,outTime.tv_sec-systime.tv_sec,outTime.tv_usec,message_recv);
-
                 if(strcmp(message,message_recv) == 0){
                     accept++;
                 }
@@ -109,7 +103,6 @@ struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long p
             }
             printf("Connection problem, upping the sleep time: %lds %ldns\n",sleep.tv_sec,sleep.tv_nsec);
         }
-        QueueDestroy(&queue);
         (*iterSendUDP) = 0;
         accept = 0;
     }
@@ -166,7 +159,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
     }
     bzero(message,1024);
     bzero(message_recv,1024);
-    strcpy(message,"CONNECT");
+    sprintf(message,"CONNECT#%ld",probeSize);
     struct timeval timeout;
     timeout.tv_sec = 2;
     timeout.tv_usec = 0;
@@ -276,6 +269,12 @@ int meter(char *hostname,char *port,long probeSize,long time){
             recievedPackets += accept;
             QueueUpMeasure(&measureResults,speed);
         }
+    }
+    bzero(message, (size_t) probeSize);
+    strcpy(message,"END");
+    if (sendto(client_socket, message, probeSize, 0, servinfo->ai_addr, servinfo->ai_addrlen) < 0) {
+        perror("ERROR: sendto");
+        return 1;
     }
     avrgSpeed = avrgSpeed/5;
     free(message);
