@@ -19,4 +19,4 @@
 #include <sys/mman.h>
 #include <signal.h>
 
-int meter(char *hostname,char *port,long probeSize,long time);
+int meter(char *hostname,char *port,long probeS,long time);

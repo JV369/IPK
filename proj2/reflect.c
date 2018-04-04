@@ -51,7 +51,7 @@ void reflect(char *port){
         }
         char *token = strtok(message,"#");
         if(strcmp(token,"CONNECT") != 0){
-            fprintf(stderr,"Control message has wrong format\n");
+            fprintf(stderr,"Connection error\n");
             break;
         }
         token = strtok(NULL,"#");

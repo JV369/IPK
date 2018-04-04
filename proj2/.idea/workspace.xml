@@ -26,11 +26,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="meter.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="meter.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/meter.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2112">
-              <caret line="132" column="50" lean-forward="false" selection-start-line="132" selection-start-column="41" selection-end-line="132" selection-end-column="50" />
+            <state relative-caret-position="271">
+              <caret line="214" column="28" lean-forward="false" selection-start-line="214" selection-start-column="28" selection-end-line="214" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -68,11 +68,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="reflect.c" pinned="false" current-in-tab="true">
+      <file leaf-file-name="reflect.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/reflect.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="50" column="9" lean-forward="false" selection-start-line="50" selection-start-column="9" selection-end-line="50" selection-end-column="9" />
+            <state relative-caret-position="972">
+              <caret line="54" column="18" lean-forward="true" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -91,8 +91,8 @@
       <file leaf-file-name="meter.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/meter.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="19" column="19" lean-forward="false" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+            <state relative-caret-position="378">
+              <caret line="21" column="47" lean-forward="false" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
               <folding>
                 <element signature="e#37#55#0" expanded="true" />
               </folding>
@@ -103,7 +103,7 @@
       <file leaf-file-name="ipk-mtrip.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ipk-mtrip.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="876">
+            <state relative-caret-position="-258">
               <caret line="53" column="12" lean-forward="false" selection-start-line="53" selection-start-column="12" selection-end-line="53" selection-end-column="64" />
               <folding>
                 <element signature="e#36#54#0" expanded="true" />
@@ -119,6 +119,7 @@
       <find>sighan</find>
       <find>accept</find>
       <find>time</find>
+      <find>servinfo</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -129,8 +130,8 @@
         <option value="$PROJECT_DIR$/queue.c" />
         <option value="$PROJECT_DIR$/queue.h" />
         <option value="$PROJECT_DIR$/meter.h" />
-        <option value="$PROJECT_DIR$/meter.c" />
         <option value="$PROJECT_DIR$/reflect.c" />
+        <option value="$PROJECT_DIR$/meter.c" />
       </list>
     </option>
   </component>
@@ -385,12 +386,12 @@
       <workItem from="1522600839945" duration="3829000" />
       <workItem from="1522695290598" duration="3615000" />
       <workItem from="1522782206762" duration="10415000" />
-      <workItem from="1522829232001" duration="5534000" />
+      <workItem from="1522829232001" duration="10805000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="79858000" />
+    <option name="totallyTimeSpent" value="85129000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -798,12 +799,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ipk-mtrip.c">
+    <entry file="file://$PROJECT_DIR$/queue.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="876">
+          <caret line="66" column="41" lean-forward="false" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/IOS_projects/IOS_proj2/proj2.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="876">
+          <caret line="304" column="43" lean-forward="false" selection-start-line="304" selection-start-column="12" selection-end-line="304" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ipk-mtrip.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-258">
           <caret line="53" column="12" lean-forward="false" selection-start-line="53" selection-start-column="12" selection-end-line="53" selection-end-column="64" />
           <folding>
             <element signature="e#36#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reflect.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/meter.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="21" column="47" lean-forward="false" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
+          <folding>
+            <element signature="e#37#55#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -818,52 +853,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/queue.c">
+    <entry file="file://$PROJECT_DIR$/reflect.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="876">
-          <caret line="66" column="41" lean-forward="false" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/reflect.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/meter.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="19" lean-forward="false" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
-          <folding>
-            <element signature="e#37#55#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/IOS_projects/IOS_proj2/proj2.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="876">
-          <caret line="304" column="43" lean-forward="false" selection-start-line="304" selection-start-column="12" selection-end-line="304" selection-end-column="43" />
+        <state relative-caret-position="972">
+          <caret line="54" column="18" lean-forward="true" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/meter.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2112">
-          <caret line="132" column="50" lean-forward="false" selection-start-line="132" selection-start-column="41" selection-end-line="132" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/reflect.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="50" column="9" lean-forward="false" selection-start-line="50" selection-start-column="9" selection-end-line="50" selection-end-column="9" />
+        <state relative-caret-position="271">
+          <caret line="214" column="28" lean-forward="false" selection-start-line="214" selection-start-column="28" selection-end-line="214" selection-end-column="28" />
           <folding />
         </state>
       </provider>

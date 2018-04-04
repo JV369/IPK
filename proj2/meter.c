@@ -4,11 +4,18 @@
 
 #define _DEFAULT_SOURCE
 #include "meter.h"
-
+struct addrinfo *servinfo;
+long probeSize;
+int client_socket;
 /**
  * @brief odchytávač SIGINT
  */
 void sighandlerMeter(){
+    char *message_err = (char *)malloc(1024 * sizeof(char));
+    strcpy(message_err,"END");
+    sendto(client_socket, message_err, probeSize, 0, servinfo->ai_addr, servinfo->ai_addrlen);
+    free(servinfo);
+    free(message_err);
     exit(0);
 }
 
@@ -30,7 +37,7 @@ void fillString(char **strng,long to){
  * @param probeSize
  * @return
  */
-struct timespec getSleepTime(int client_socket, struct addrinfo *servinfo,long probeSize){
+struct timespec getSleepTime(int client_socket){
 
     int accept = 0;
     int testValue = 0;
@@ -130,9 +137,9 @@ void printActualSpeed(float speed){
     }
 }
 
-int meter(char *hostname,char *port,long probeSize,long time){
-    int client_socket;
-    struct addrinfo hints, *servinfo;
+int meter(char *hostname,char *port,long probeS,long time){
+    probeSize = probeS;
+    struct addrinfo hints;
     signal(SIGINT, sighandlerMeter);
     char *message = (char *)malloc(1024 * sizeof(char));
     char *message_recv = (char *)malloc(1024 * sizeof(char));
@@ -190,7 +197,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
 
     struct timespec sleep;
     printf("Testing the connection ... \n");
-    sleep = getSleepTime(client_socket,servinfo,probeSize);
+    sleep = getSleepTime(client_socket);
     struct timeval systime,inTime, outTime;
     TQueue queue;
     QueueInit(&queue);
@@ -205,10 +212,10 @@ int meter(char *hostname,char *port,long probeSize,long time){
     int recievedPackets = 0;
     int iteration = 0;
     int *numOfPackets = mmap(0, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    float iterTime = time/5.0f;
+    float iterTime = time/10.0f;
     iterTime++;
     printf("Sending probes ... \n");
-    while(iteration < 5) {
+    while(iteration < 10) {
         int accept = 0;
         pid_t pid;
         pid = fork();
@@ -258,7 +265,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
                 sleep.tv_nsec -= sleep.tv_nsec*0.05;
             }
             (*numOfPackets) = 0;
-            float speed = ((accept*probeSize*8.0f)/(iterTime-1.0f))*2.0f;
+            float speed = ((accept*probeSize*8.0f)/(iterTime-1.0f));
             avrgSpeed += speed;
             if(speed < minSpeed){
                 minSpeed = speed;
@@ -276,11 +283,11 @@ int meter(char *hostname,char *port,long probeSize,long time){
         perror("ERROR: sendto");
         return 1;
     }
-    avrgSpeed = avrgSpeed/5;
+    avrgSpeed = avrgSpeed/10.0f;
     free(message);
     free(message_recv);
     printf("Caculating stats ... \n");
-    float avrgRtt = 0;
+    double avrgRtt = 0;
 
     char *string = (char *)malloc(probeSize);
     while(queue.front != NULL){
@@ -297,10 +304,10 @@ int meter(char *hostname,char *port,long probeSize,long time){
         secSend = strtol(token,NULL,10);
         token = strtok(NULL,"#");
         usecSend = strtol(token,NULL,10);
-        float rtt = (secRc + usecRc/1000000.0f)-(secSend+usecSend/1000000.0f);
+        double rtt = (secRc + usecRc/1000000.0)-(secSend+usecSend/1000000.0);
         avrgRtt += rtt;
     }
-    avrgRtt = (avrgRtt*1000.0f)/recievedPackets;
+    avrgRtt = (avrgRtt*1000.0)/recievedPackets;
     //printf("recieved ... %d\n",recievedPackets);
     float stdevSpeed = 0;
     while (measureResults.front != NULL){
@@ -308,7 +315,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
         QueueFrontPopMeasure(&measureResults,&speed);
         stdevSpeed += powf(speed-avrgSpeed,2);
     }
-    stdevSpeed = sqrtf(stdevSpeed/5.0f);
+    stdevSpeed = sqrtf(stdevSpeed/10.0f);
 
     printf("--------------------------------------------\n");
     printf("Average speed:\t\t\t");
@@ -319,7 +326,7 @@ int meter(char *hostname,char *port,long probeSize,long time){
     printActualSpeed(minSpeed);
     printf("Standart deviation of speed:\t");
     printActualSpeed(stdevSpeed);
-    printf("Average RTT:\t\t\t%.2f ms\n",avrgRtt);
+    printf("Average RTT:\t\t\t%.2g ms\n",avrgRtt);
     printf("--------------------------------------------\n");
     free(string);
     munmap(numOfPackets,sizeof(int));
