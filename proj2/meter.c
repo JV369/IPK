@@ -1,6 +1,8 @@
-//
-// Created by jan on 28.3.18.
-//
+/**
+ * Kod pro měřák
+ * Autor: Jan Vávra
+ * Login: xvavra20
+ */
 
 #define _DEFAULT_SOURCE
 #include "meter.h"
@@ -19,6 +21,11 @@ void sighandlerMeter(){
     exit(0);
 }
 
+/**
+ * naplní zprávu daty na délku řetězce - 1
+ * @param strng řetězec, který se má naplnit
+ * @param to délka řetězce
+ */
 void fillString(char **strng,long to){
     char *temp = (char *)malloc((to) * sizeof(char));
     bzero(temp,to);
@@ -32,9 +39,7 @@ void fillString(char **strng,long to){
 }
 /**
  * @brief simuluje posílání zpráv a snaží se najít správný "sleep time" mezi odesláním
- * @param client_socket
- * @param servinfo
- * @param probeSize
+ * @param client_socket socket na který se mají zasílat zprávy
  * @return
  */
 struct timespec getSleepTime(int client_socket){
@@ -65,6 +70,7 @@ struct timespec getSleepTime(int client_socket){
     struct timeval systime;
 
     pid_t pid;
+    //musí 3x projít bez toho aniž by se ztratila značná část packetů
     while (testValue < treshold) {
         waitTime = 3;
         printf("Testing connection for %d seconds\n",waitTime-1);
@@ -73,6 +79,7 @@ struct timespec getSleepTime(int client_socket){
         if (pid == 0){
             waitTime--;
         }
+        //zasílání probe packetů po 2 sekundách
         for (struct timeval actTime = systime; actTime.tv_sec < systime.tv_sec + waitTime; gettimeofday(&actTime,NULL)) {
             if(pid == 0) {
                 bzero(message,probeSize);
@@ -91,6 +98,7 @@ struct timespec getSleepTime(int client_socket){
                 }
             }
         }
+        // konec zasílání
         if (pid == 0) {
             free(message);
             free(message_recv);
@@ -99,6 +107,7 @@ struct timespec getSleepTime(int client_socket){
         }
         testValue++;
         printf("Send/recieved packets: %d/%d \n",accept,(*iterSendUDP));
+        //kontrola kolik přišlo
         if(((*iterSendUDP) - accept) > 10){
             testValue = 0;
             if(sleep.tv_nsec == 0)
@@ -119,6 +128,10 @@ struct timespec getSleepTime(int client_socket){
     return sleep;
 }
 
+/**
+ * převede rychlost na větší jednotky a vypíše
+ * @param speed rychlost, která se má vypsat
+ */
 void printActualSpeed(float speed){
     if(speed < 1000.0f){
         printf("%.2f b/s\n",speed);
@@ -138,12 +151,15 @@ void printActualSpeed(float speed){
 }
 
 int meter(char *hostname,char *port,long probeS,long time){
+    //inicializace proměnných
     probeSize = probeS;
     struct addrinfo hints;
     signal(SIGINT, sighandlerMeter);
     char *message = (char *)malloc(1024 * sizeof(char));
     char *message_recv = (char *)malloc(1024 * sizeof(char));
 
+    //pokud je menší než časová hlavička, zvětší velikost podle toho kolik bude potřebovat místa na uložení času
+    //pokud je větší než UDP_MAX tak zmenší na UDP_MAX
     int digits = (int)log10(time) +1;
     if(probeSize < 9 + digits)
         probeSize = 9 + digits;
@@ -151,6 +167,7 @@ int meter(char *hostname,char *port,long probeS,long time){
         probeSize = 65507;
     }
 
+    //zjištění adresy
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
@@ -160,6 +177,8 @@ int meter(char *hostname,char *port,long probeS,long time){
     }
     free(hostname);
     free(port);
+
+    //získání socketu
     if ((client_socket = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol)) == -1) {
         perror("ERROR: socket");
         exit(EXIT_FAILURE);
@@ -175,6 +194,7 @@ int meter(char *hostname,char *port,long probeS,long time){
         perror("Error: setsockopt\n");
         exit(1);
     }
+    //poslání prvotní zprávy
     if(sendto(client_socket,message,1024,0,servinfo->ai_addr,servinfo->ai_addrlen)< 0){
         perror("ERROR: sendto");
         return 1;
@@ -182,6 +202,7 @@ int meter(char *hostname,char *port,long probeS,long time){
     if(recvfrom(client_socket,message_recv,1024,0,servinfo->ai_addr,&servinfo->ai_addrlen)<0){
         perror("ERROR: recvfrom");
     }
+    //kontrola na doručenou zprávu
     if(strcmp(message_recv,"CONNECT") == 0){
         printf("Connected\n");
     }
@@ -195,6 +216,7 @@ int meter(char *hostname,char *port,long probeS,long time){
     free(message);
     free(message_recv);
 
+    //získání času na uspání
     struct timespec sleep;
     printf("Testing the connection ... \n");
     sleep = getSleepTime(client_socket);
@@ -215,6 +237,8 @@ int meter(char *hostname,char *port,long probeS,long time){
     float iterTime = time/10.0f;
     iterTime++;
     printf("Sending probes ... \n");
+
+    //smyčka intervalů měření
     while(iteration < 10) {
         int accept = 0;
         pid_t pid;
@@ -223,6 +247,7 @@ int meter(char *hostname,char *port,long probeS,long time){
             iterTime--;
         }
         gettimeofday(&systime,NULL);
+        //smyčka měření na intervalu
         for (struct timeval actTime = systime; (actTime.tv_sec*1000000.0 + actTime.tv_usec) < ((systime.tv_sec*1000000.0 + systime.tv_usec) + iterTime*1000000.0); gettimeofday(&actTime, NULL)) {
             if (pid == 0) {
                 bzero(message, (size_t) probeSize);
@@ -248,6 +273,7 @@ int meter(char *hostname,char *port,long probeS,long time){
                 }
             }
         }
+        //konec měření na intervalu
         if (pid == 0) {
             QueueDestroy(&queue);
             QueueDestroyMeasure(&measureResults);
@@ -256,8 +282,10 @@ int meter(char *hostname,char *port,long probeS,long time){
             free(servinfo);
             exit(0);
         }
+            //zjištění kolik paketů se úspěšně odeslalo
         else if (pid > 0){
             iteration++;
+            //pokud je počet odeslaných paketů menší než přijatých tak zvedneme sleep time jinak zmenšíme
             if(accept < (*numOfPackets)){
                 sleep.tv_nsec += sleep.tv_nsec*0.1;
             }
@@ -279,6 +307,7 @@ int meter(char *hostname,char *port,long probeS,long time){
     }
     bzero(message, (size_t) probeSize);
     strcpy(message,"END");
+    //zaslání zprávy pro vyskočení ze smyčky pro reflektování
     if (sendto(client_socket, message, probeSize, 0, servinfo->ai_addr, servinfo->ai_addrlen) < 0) {
         perror("ERROR: sendto");
         return 1;
@@ -290,6 +319,7 @@ int meter(char *hostname,char *port,long probeS,long time){
     double avrgRtt = 0;
 
     char *string = (char *)malloc(probeSize);
+    //vypočet rtt
     while(queue.front != NULL){
         long secSend;
         long usecSend;
@@ -310,13 +340,14 @@ int meter(char *hostname,char *port,long probeS,long time){
     avrgRtt = (avrgRtt*1000.0)/recievedPackets;
     //printf("recieved ... %d\n",recievedPackets);
     float stdevSpeed = 0;
+    //výpočet směrodatné odchylky
     while (measureResults.front != NULL){
         float speed;
         QueueFrontPopMeasure(&measureResults,&speed);
         stdevSpeed += powf(speed-avrgSpeed,2);
     }
     stdevSpeed = sqrtf(stdevSpeed/10.0f);
-
+    //vypsání na výstup
     printf("--------------------------------------------\n");
     printf("Average speed:\t\t\t");
     printActualSpeed(avrgSpeed);
@@ -326,7 +357,7 @@ int meter(char *hostname,char *port,long probeS,long time){
     printActualSpeed(minSpeed);
     printf("Standart deviation of speed:\t");
     printActualSpeed(stdevSpeed);
-    printf("Average RTT:\t\t\t%.2g ms\n",avrgRtt);
+    printf("Average RTT:\t\t\t%.2f ms\n",avrgRtt);
     printf("--------------------------------------------\n");
     free(string);
     munmap(numOfPackets,sizeof(int));

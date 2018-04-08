@@ -1,6 +1,8 @@
-//
-// Created by jan on 28.3.18.
-//
+/**
+ * Kod pro reflektor
+ * Autor: Jan Vávra
+ * Login: xvavra20
+ */
 
 #include "reflect.h"
 struct addrinfo *res;
@@ -16,7 +18,7 @@ void sighandler(){
 
 
 void reflect(char *port){
-
+    //inicializace proměnných
     struct addrinfo hints;
     int sockfd;
     signal(SIGINT, sighandler);
@@ -44,6 +46,7 @@ void reflect(char *port){
     }
     message = (char *) malloc(1024);
     long alloc;
+    //hlavní smyčka
     while(1) {
         if (recvfrom(sockfd, message, 1024, 0, res->ai_addr, &res->ai_addrlen) < 0) {
             perror("ERROR: recvfrom");
@@ -57,6 +60,7 @@ void reflect(char *port){
         token = strtok(NULL,"#");
         alloc = strtol(token,NULL,10);
         message = (char *)realloc(message,alloc);
+        //smyčka pro reflektování probe packetů o velikosti alloc, dokud nepříjmem kontrolní zprávu END
         while(strcmp(message,"END") != 0){
             if (sendto(sockfd, message, alloc, 0, res->ai_addr, res->ai_addrlen) < 0) {
                 perror("ERROR: sendto");
@@ -68,6 +72,9 @@ void reflect(char *port){
                 break;
             }
         }
+        //konec smyčky pro reflektování
+
+        //realokování zprávy a čekání na další měření
         message = (char *)realloc(message,1024);
     }
     free(message);
