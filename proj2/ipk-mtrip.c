@@ -1,6 +1,8 @@
-//
-// Created by jan on 28.3.18.
-//
+/**
+ * Main pro ipk-mtrip
+ * Autor: Jan Vávra
+ * Login: xvavra20
+ */
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -21,6 +23,17 @@ int isNum(char *arg){
     return 0;
 }
 
+
+/**
+ * vlastní getopt
+ * @param arguments argumenty na vstupu
+ * @param lenght počet argumentu
+ * @param port port na které bude probíhat připojení
+ * @param address adresa reflektoru
+ * @param probeSize velikost probe paketu
+ * @param time doba probíhání měření
+ * @return vrátí 1 pokud se jedná o argumenty pro reflektor, 2 pro meter, jinak 0
+ */
 int checkArg(char **arguments,int lenght, char **port, char **address, long *probeSize,long *time){
     if (!(lenght == 4 || lenght == 10)){
         return 0;

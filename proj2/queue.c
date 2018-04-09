@@ -1,9 +1,12 @@
-//
-// Created by jan on 29.3.18.
-//
+/**
+ * Kod pro frontu
+ * Autor: Jan Vávra
+ * Login: xvavra20
+ */
 
 
 #include "queue.h"
+
 
 void QueueInit(TQueue *queue){
     queue->front = NULL;

@@ -44,7 +44,7 @@ void fillString(char **strng,long to){
  */
 struct timespec getSleepTime(int client_socket){
 
-    int accept = 0;
+    long accept = 0;
     int testValue = 0;
     //hodnoty pro stanoveni kvality posilani/obdrzeni paketu
     int treshold = 3;
@@ -93,9 +93,6 @@ struct timespec getSleepTime(int client_socket){
             else if(pid > 0){
                 bzero(message_recv,(size_t)probeSize);
                 recvfrom(client_socket,message_recv,probeSize,0,servinfo->ai_addr,&servinfo->ai_addrlen);
-                if(strcmp(message,message_recv) == 0){
-                    accept++;
-                }
             }
         }
         // konec zasílání
@@ -105,8 +102,15 @@ struct timespec getSleepTime(int client_socket){
             free(servinfo);
             exit(0);
         }
+        bzero(message, (size_t) probeSize);
+        strcpy(message,"PACKET_COUNT");
+        if (sendto(client_socket, message, probeSize, 0, servinfo->ai_addr, servinfo->ai_addrlen) < 0) {
+            perror("ERROR: sendto");
+        }
+        recvfrom(client_socket, message, probeSize, 0, servinfo->ai_addr, &servinfo->ai_addrlen);
+        accept = strtol(message,NULL,10);
         testValue++;
-        printf("Send/recieved packets: %d/%d \n",accept,(*iterSendUDP));
+        printf("Send/recieved packets: %ld/%d \n",accept,(*iterSendUDP));
         //kontrola kolik přišlo
         if(((*iterSendUDP) - accept) > 10){
             testValue = 0;
@@ -117,6 +121,10 @@ struct timespec getSleepTime(int client_socket){
                 sleep.tv_sec += 1;
                 sleep.tv_nsec = 0;
             }
+            if(sleep.tv_sec == 2){
+				printf("Connection problem\n");
+				exit(1);
+			}
             printf("Connection problem, upping the sleep time: %lds %ldns\n",sleep.tv_sec,sleep.tv_nsec);
         }
         (*iterSendUDP) = 0;
@@ -161,9 +169,12 @@ int meter(char *hostname,char *port,long probeS,long time){
     //pokud je menší než časová hlavička, zvětší velikost podle toho kolik bude potřebovat místa na uložení času
     //pokud je větší než UDP_MAX tak zmenší na UDP_MAX
     int digits = (int)log10(time) +1;
-    if(probeSize < 9 + digits)
+    if(probeSize < 9 + digits){
         probeSize = 9 + digits;
+        printf("Probe size is too small, upping to %ld\n",probeSize);
+	}
     else if (probeSize > 65507){
+		printf("Probe size is too big, lowering to 65507\n");
         probeSize = 65507;
     }
 
@@ -187,7 +198,7 @@ int meter(char *hostname,char *port,long probeS,long time){
     bzero(message_recv,1024);
     sprintf(message,"CONNECT#%ld",probeSize);
     struct timeval timeout;
-    timeout.tv_sec = 2;
+    timeout.tv_sec = 1;
     timeout.tv_usec = 0;
     if (setsockopt (client_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0 ||
         setsockopt (client_socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0) {
@@ -226,6 +237,15 @@ int meter(char *hostname,char *port,long probeS,long time){
     message = (char *)malloc(probeSize * sizeof(char));
     message_recv = (char *)malloc(probeSize * sizeof(char));
 
+    //anulace counteru na reflektoru
+    bzero(message, (size_t) probeSize);
+    strcpy(message,"PACKET_COUNT");
+    if (sendto(client_socket, message, probeSize, 0, servinfo->ai_addr, servinfo->ai_addrlen) < 0) {
+        perror("ERROR: sendto");
+        return 1;
+    }
+    recvfrom(client_socket, message, probeSize, 0, servinfo->ai_addr, &servinfo->ai_addrlen);
+
     float minSpeed = INT_MAX;
     float maxSpeed = INT_MIN;
     float avrgSpeed = 0;
@@ -240,7 +260,7 @@ int meter(char *hostname,char *port,long probeS,long time){
 
     //smyčka intervalů měření
     while(iteration < 10) {
-        int accept = 0;
+        long accept = 0;
         pid_t pid;
         pid = fork();
         if(pid == 0){
@@ -264,7 +284,7 @@ int meter(char *hostname,char *port,long probeS,long time){
                 bzero(message_recv, (size_t) probeSize);
                 int rf = recvfrom(client_socket, message_recv, probeSize, 0, servinfo->ai_addr, &servinfo->ai_addrlen);
                 gettimeofday(&outTime, NULL);
-                if (rf < 0) {
+                if (rf < 0 || strlen(message_recv) < probeSize-1) {
                     if (accept < (*numOfPackets))
                         QueueUp(&queue, outTime.tv_sec - systime.tv_sec, outTime.tv_usec, "none");
                 } else {
@@ -284,10 +304,24 @@ int meter(char *hostname,char *port,long probeS,long time){
         }
             //zjištění kolik paketů se úspěšně odeslalo
         else if (pid > 0){
+            bzero(message, (size_t) probeSize);
+            strcpy(message,"PACKET_COUNT");
+            if (sendto(client_socket, message, probeSize, 0, servinfo->ai_addr, servinfo->ai_addrlen) < 0) {
+                perror("ERROR: sendto");
+                return 1;
+            }
+            bzero(message, (size_t) probeSize);
+            recvfrom(client_socket, message, probeSize, 0, servinfo->ai_addr, &servinfo->ai_addrlen);
+            accept = strtol(message,NULL,10);
             iteration++;
             //pokud je počet odeslaných paketů menší než přijatých tak zvedneme sleep time jinak zmenšíme
             if(accept < (*numOfPackets)){
+				if(sleep.tv_nsec == 0){
+					sleep.tv_nsec = 100;
+				}
+				else{
                 sleep.tv_nsec += sleep.tv_nsec*0.1;
+				}
             }
             else{
                 sleep.tv_nsec -= sleep.tv_nsec*0.05;
@@ -328,6 +362,7 @@ int meter(char *hostname,char *port,long probeS,long time){
         bzero(string,probeSize);
         QueueFrontPop(&queue,&secRc,&usecRc,&string);
         if(strcmp(string,"none")== 0){
+            recievedPackets--;
             continue;
         }
         char *token = strtok(string,"#");

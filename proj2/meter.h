@@ -1,7 +1,8 @@
-//
-// Created by jan on 28.3.18.
-//
-
+/**
+ * Hlavičkový soubor pro měřák
+ * Autor: Jan Vávra
+ * Login: xvavra20
+ */
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>

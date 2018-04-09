@@ -60,8 +60,16 @@ void reflect(char *port){
         token = strtok(NULL,"#");
         alloc = strtol(token,NULL,10);
         message = (char *)realloc(message,alloc);
+        long sendPackets = -1;
         //smyčka pro reflektování probe packetů o velikosti alloc, dokud nepříjmem kontrolní zprávu END
         while(strcmp(message,"END") != 0){
+            if(strcmp(message,"PACKET_COUNT") == 0){
+                sprintf(message,"%ld",sendPackets);
+                sendPackets = 0;
+            }
+            else {
+                sendPackets++;
+            }
             if (sendto(sockfd, message, alloc, 0, res->ai_addr, res->ai_addrlen) < 0) {
                 perror("ERROR: sendto");
                 break;
